@@ -1,0 +1,6 @@
+# Team-footage harness on synthetic sessions. Tuning reads only `tune`; scoring only `score` and locks it.
+tune: [s1]
+score: [s2]
+sources:
+  s1: {synth_scenario: session_eval, seed: 101}
+  s2: {synth_scenario: session_eval, seed: 102}

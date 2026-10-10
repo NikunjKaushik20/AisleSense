@@ -1,0 +1,172 @@
+{
+ "name": "staged_team_mock",
+ "data": "team footage site team_mock",
+ "note": "On synth_aisle this proves the harness runs end to end; it is not block accuracy [A29].",
+ "config": {
+  "site": "team_mock",
+  "density_rule": {
+   "cell_m": 1.0,
+   "window_s": 30.0,
+   "min_person_s": 5.0,
+   "density_q": 0.9,
+   "slow_mps": 0.3,
+   "text": "cell-window (1 m x window) flagged as bottleneck iff person-seconds >= top decile of eligible cell-windows (>= 5 person-s) AND mean speed <= 0.3 m/s"
+  },
+  "window_grid": [
+   15.0,
+   30.0,
+   60.0
+  ],
+  "walkway_rule": {
+   "slow_mps": 0.3,
+   "min_s": 5.0,
+   "pass_radius_m": 2.0,
+   "min_passers": 2,
+   "max_gap_s": 2.0,
+   "speed_lag_s": 1.0,
+   "text": "lingerer = speed < 0.3 m/s for >= 5 s; shelf_front lingerer -> BROWSE; walkway lingerer with >= 2 other moving tracks within 2 m during its stay -> BLOCK candidate; else unflagged"
+  }
+ },
+ "seed": {
+  "s1": {
+   "video": "merl_x/Videos_MERL_Shopping_Dataset/21_1_crop.mp4"
+  },
+  "s2": {
+   "video": "merl_x/Videos_MERL_Shopping_Dataset/22_1_crop.mp4"
+  }
+ },
+ "data_hash": "9172ad5e2074b498",
+ "sessions": {
+  "tune": [
+   "s1"
+  ],
+  "score": [
+   "s2"
+  ]
+ },
+ "access_log": [
+  [
+   "tune",
+   "s1"
+  ],
+  [
+   "score",
+   "s2"
+  ]
+ ],
+ "tuned": {
+  "window_s": 15.0,
+  "window_grid_tune_recall_minus_fa": {
+   "15.0": -0.5,
+   "30.0": -0.5,
+   "60.0": -1.0
+  },
+  "tune_sessions": [
+   "s1"
+  ]
+ },
+ "n": {
+  "block_events": 0,
+  "browse_events": 2
+ },
+ "metric": {
+  "arms": {
+   "density": {
+    "block_recall": 0.0,
+    "browse_false_alarm": 0.5,
+    "n_block": 0,
+    "n_browse": 2,
+    "blocks_flagged": 0,
+    "browses_flagged": 1
+   },
+   "walkway": {
+    "block_recall": 0.0,
+    "browse_false_alarm": 0.0,
+    "n_block": 0,
+    "n_browse": 2,
+    "blocks_flagged": 0,
+    "browses_flagged": 0
+   }
+  },
+  "per_session": {
+   "s2": {
+    "density": {
+     "block": {
+      "n": 0,
+      "flagged": 0,
+      "rate": null
+     },
+     "browse": {
+      "n": 2,
+      "flagged": 1,
+      "rate": 0.5
+     },
+     "flags_total": 1,
+     "flags_outside_events": 0
+    },
+    "walkway": {
+     "block": {
+      "n": 0,
+      "flagged": 0,
+      "rate": null
+     },
+     "browse": {
+      "n": 2,
+      "flagged": 0,
+      "rate": 0.0
+     },
+     "flags_total": 0,
+     "flags_outside_events": 0
+    }
+   }
+  }
+ },
+ "prior": {
+  "flag_nothing": {
+   "block_recall": 0.0,
+   "browse_false_alarm": 0.0
+  },
+  "flag_every_event": {
+   "block_recall": 1.0,
+   "browse_false_alarm": 1.0
+  }
+ },
+ "headline": [
+  {
+   "metric": "block recall / browse false alarm (density baseline)",
+   "arm": "density",
+   "value": 0.0,
+   "browse_false_alarm": 0.5,
+   "data": "team_mock"
+  },
+  {
+   "metric": "block recall / browse false alarm (walkway rule)",
+   "arm": "walkway",
+   "value": 0.0,
+   "browse_false_alarm": 0.0,
+   "data": "team_mock"
+  }
+ ],
+ "score_lock": {
+  "lock": "var/locks/team_mock_s2_events.lock",
+  "n_scored_runs": 1,
+  "force_rescore": false,
+  "synthetic": false,
+  "rule_hash": "88fa95fcc663f92d",
+  "rule_hash_first": "88fa95fcc663f92d",
+  "rule_changed_since_first_score": false,
+  "runs_before_rule_hash": 0,
+  "script": "staged_events",
+  "tuned": {
+   "window_s": 15.0,
+   "window_grid_tune_recall_minus_fa": {
+    "15.0": -0.5,
+    "30.0": -0.5,
+    "60.0": -1.0
+   },
+   "tune_sessions": [
+    "s1"
+   ]
+  }
+ }
+}

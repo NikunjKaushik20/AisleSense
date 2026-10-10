@@ -1,0 +1,117 @@
+{
+ "name": "merl_dwell_live",
+ "data": "MERL Shopping test clips, live CV path (aisle.ingest.sources.VideoSource on GPU)",
+ "config": {
+  "model": "yolo11n",
+  "track_buffer": 30,
+  "stride": 2,
+  "clips": [
+   "27_1",
+   "27_2",
+   "27_3"
+  ],
+  "note": "app VideoSource path vs reference merl_yolo.py rows (same model, tracker cfg, stride); IDs and tracked seconds compared per clip"
+ },
+ "seed": 0,
+ "n": {
+  "clips": 3
+ },
+ "metric": {
+  "ids_per_clip_mean": 8.0,
+  "ref_ids_per_clip_mean": 8.0,
+  "mean_rel_diff_ids": 0.0,
+  "trk_s_mae_vs_ref": 0.0,
+  "frame_browse_tracked": {
+   "P": 0.879196,
+   "R": 0.888313,
+   "F1": 0.883731,
+   "tp": 4112,
+   "fp": 565,
+   "fn": 517
+  },
+  "frame_browse_prior": {
+   "P": 0.758355,
+   "R": 1.0,
+   "F1": 0.862573,
+   "tp": 4629,
+   "fp": 1475,
+   "fn": 0
+  }
+ },
+ "tolerance": {
+  "mean_rel_diff_ids_max": 0.5
+ },
+ "wall_s": 204.5,
+ "per_clip": [
+  {
+   "clip": "27_1",
+   "frames": 2031,
+   "dur_s": 135.4,
+   "gt_s": 102.4,
+   "trk_s": 96.733333,
+   "n_ids": 7,
+   "n_ids_2s": 4,
+   "longest_id_s": 48.933333,
+   "pres": [
+    1306,
+    145,
+    230
+   ],
+   "prior": [
+    1536,
+    495,
+    0
+   ],
+   "ref_n_ids": 7,
+   "ref_trk_s": 96.733333,
+   "infer_s": 62.426
+  },
+  {
+   "clip": "27_2",
+   "frames": 2043,
+   "dur_s": 136.2,
+   "gt_s": 110.666667,
+   "trk_s": 112.2,
+   "n_ids": 6,
+   "n_ids_2s": 4,
+   "longest_id_s": 58.2,
+   "pres": [
+    1538,
+    145,
+    122
+   ],
+   "prior": [
+    1660,
+    383,
+    0
+   ],
+   "ref_n_ids": 6,
+   "ref_trk_s": 112.2,
+   "infer_s": 61.847
+  },
+  {
+   "clip": "27_3",
+   "frames": 2030,
+   "dur_s": 135.333333,
+   "gt_s": 95.533333,
+   "trk_s": 102.866667,
+   "n_ids": 11,
+   "n_ids_2s": 5,
+   "longest_id_s": 36.466667,
+   "pres": [
+    1268,
+    275,
+    165
+   ],
+   "prior": [
+    1433,
+    597,
+    0
+   ],
+   "ref_n_ids": 11,
+   "ref_trk_s": 102.866667,
+   "infer_s": 60.252
+  }
+ ],
+ "pass": true
+}

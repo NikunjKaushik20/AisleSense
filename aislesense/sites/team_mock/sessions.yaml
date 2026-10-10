@@ -1,0 +1,9 @@
+tune:
+- s1
+score:
+- s2
+sources:
+  s1:
+    video: merl_x/Videos_MERL_Shopping_Dataset/21_1_crop.mp4
+  s2:
+    video: merl_x/Videos_MERL_Shopping_Dataset/22_1_crop.mp4

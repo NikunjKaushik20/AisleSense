@@ -1,0 +1,221 @@
+{
+ "name": "api_latency",
+ "data": "ATC 2012-11-14 trajectory replay (running session)",
+ "config": {
+  "speed": 600,
+  "warm_s": 60.0,
+  "measure_s": 60.0,
+  "every_s": 3.0,
+  "tabs": [
+   "/api/dwell",
+   "/api/tips",
+   "/api/deadzones?keep=1.0",
+   "/api/flags",
+   "/api/deadzones?keep=0.01",
+   "/api/journeys"
+  ],
+  "client": "fastapi TestClient, in process"
+ },
+ "seed": null,
+ "n": {
+  "requests_before": 18,
+  "requests_after": 20
+ },
+ "metric": {
+  "before": {
+   "prefetch": false,
+   "n_requests": 18,
+   "p50_s": 0.028,
+   "p95_s": 6.9635,
+   "max_s": 7.0964,
+   "share_under_1s": 0.667,
+   "events_at_end": 710485,
+   "media_hours_at_end": 10.88,
+   "panel_stats": {
+    "prefetch": false,
+    "builds": 10,
+    "stale_served": 0,
+    "build_s": 28.7,
+    "cached_panels": 6
+   },
+   "requests": [
+    {
+     "path": "/api/dwell",
+     "s": 7.0964
+    },
+    {
+     "path": "/api/tips",
+     "s": 6.94
+    },
+    {
+     "path": "/api/deadzones?keep=1.0",
+     "s": 3.0381
+    },
+    {
+     "path": "/api/flags",
+     "s": 0.7622
+    },
+    {
+     "path": "/api/deadzones?keep=0.01",
+     "s": 1.6582
+    },
+    {
+     "path": "/api/journeys",
+     "s": 1.1692
+    },
+    {
+     "path": "/api/dwell",
+     "s": 3.423
+    },
+    {
+     "path": "/api/tips",
+     "s": 0.925
+    },
+    {
+     "path": "/api/deadzones?keep=1.0",
+     "s": 0.0202
+    },
+    {
+     "path": "/api/flags",
+     "s": 0.0021
+    },
+    {
+     "path": "/api/deadzones?keep=0.01",
+     "s": 0.0265
+    },
+    {
+     "path": "/api/journeys",
+     "s": 0.0026
+    },
+    {
+     "path": "/api/dwell",
+     "s": 0.0295
+    },
+    {
+     "path": "/api/tips",
+     "s": 0.0025
+    },
+    {
+     "path": "/api/deadzones?keep=1.0",
+     "s": 0.0204
+    },
+    {
+     "path": "/api/flags",
+     "s": 0.0024
+    },
+    {
+     "path": "/api/deadzones?keep=0.01",
+     "s": 0.0186
+    },
+    {
+     "path": "/api/journeys",
+     "s": 0.0024
+    }
+   ]
+  },
+  "after": {
+   "prefetch": true,
+   "n_requests": 20,
+   "p50_s": 0.011,
+   "p95_s": 0.0265,
+   "max_s": 0.0297,
+   "share_under_1s": 1.0,
+   "events_at_end": 710485,
+   "media_hours_at_end": 10.88,
+   "panel_stats": {
+    "prefetch": true,
+    "builds": 48,
+    "stale_served": 20,
+    "build_s": 40.836,
+    "cached_panels": 8
+   },
+   "requests": [
+    {
+     "path": "/api/dwell",
+     "s": 0.0297
+    },
+    {
+     "path": "/api/tips",
+     "s": 0.0038
+    },
+    {
+     "path": "/api/deadzones?keep=1.0",
+     "s": 0.0201
+    },
+    {
+     "path": "/api/flags",
+     "s": 0.0033
+    },
+    {
+     "path": "/api/deadzones?keep=0.01",
+     "s": 0.0197
+    },
+    {
+     "path": "/api/journeys",
+     "s": 0.0035
+    },
+    {
+     "path": "/api/dwell",
+     "s": 0.025
+    },
+    {
+     "path": "/api/tips",
+     "s": 0.0021
+    },
+    {
+     "path": "/api/deadzones?keep=1.0",
+     "s": 0.0192
+    },
+    {
+     "path": "/api/flags",
+     "s": 0.002
+    },
+    {
+     "path": "/api/deadzones?keep=0.01",
+     "s": 0.0189
+    },
+    {
+     "path": "/api/journeys",
+     "s": 0.0021
+    },
+    {
+     "path": "/api/dwell",
+     "s": 0.0263
+    },
+    {
+     "path": "/api/tips",
+     "s": 0.0024
+    },
+    {
+     "path": "/api/deadzones?keep=1.0",
+     "s": 0.0181
+    },
+    {
+     "path": "/api/flags",
+     "s": 0.0023
+    },
+    {
+     "path": "/api/deadzones?keep=0.01",
+     "s": 0.0191
+    },
+    {
+     "path": "/api/journeys",
+     "s": 0.0021
+    },
+    {
+     "path": "/api/dwell",
+     "s": 0.0261
+    },
+    {
+     "path": "/api/tips",
+     "s": 0.002
+    }
+   ]
+  }
+ },
+ "prior": {
+  "name": "M4 behaviour (rebuild a running session's panel on the first request after each 10 s version)",
+  "p95_s": 6.9635
+ },
+ "notes": "after = panels of the current session are rebuilt by a background prefetch thread; a request gets the newest finished build (at most one refresh interval old while the session runs)."
+}

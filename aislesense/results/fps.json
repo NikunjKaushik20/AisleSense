@@ -1,0 +1,204 @@
+{
+ "name": "fps",
+ "data": "MERL Shopping test clips 27_1, 28_1, 29_1 (one per stream), looped",
+ "config": {
+  "model": "yolo11n.pt",
+  "tracker": "bytetrack b200",
+  "stride": 2,
+  "imgsz": 640,
+  "warmup_s": 5.0,
+  "seconds": 60.0,
+  "code_path": "aisle.ingest.multi.MultiSource",
+  "gpu": "NVIDIA GeForce RTX 3050 6GB Laptop GPU"
+ },
+ "seed": null,
+ "n": {
+  "runs": 6
+ },
+ "metric": {
+  "runs": [
+   {
+    "streams": 1,
+    "transport": "file",
+    "wall_s": 60.02,
+    "per_stream": [
+     {
+      "cam": "cam0",
+      "source": "27_1_crop.mp4",
+      "frames": 2753,
+      "processed_fps": 45.87,
+      "infer_ms_per_frame": 21.6,
+      "drops": 0,
+      "realtime_factor": 3.059
+     }
+    ],
+    "min_realtime_factor": 3.059,
+    "total_processed_fps": 45.87,
+    "demo_ok": true
+   },
+   {
+    "streams": 2,
+    "transport": "file",
+    "wall_s": 60.2,
+    "per_stream": [
+     {
+      "cam": "cam0",
+      "source": "27_1_crop.mp4",
+      "frames": 1594,
+      "processed_fps": 26.48,
+      "infer_ms_per_frame": 37.4,
+      "drops": 0,
+      "realtime_factor": 1.765
+     },
+     {
+      "cam": "cam1",
+      "source": "28_1_crop.mp4",
+      "frames": 1458,
+      "processed_fps": 24.22,
+      "infer_ms_per_frame": 40.9,
+      "drops": 0,
+      "realtime_factor": 1.615
+     }
+    ],
+    "min_realtime_factor": 1.615,
+    "total_processed_fps": 50.7,
+    "demo_ok": true
+   },
+   {
+    "streams": 3,
+    "transport": "file",
+    "wall_s": 60.22,
+    "per_stream": [
+     {
+      "cam": "cam0",
+      "source": "27_1_crop.mp4",
+      "frames": 1320,
+      "processed_fps": 21.92,
+      "infer_ms_per_frame": 45.2,
+      "drops": 0,
+      "realtime_factor": 1.461
+     },
+     {
+      "cam": "cam1",
+      "source": "28_1_crop.mp4",
+      "frames": 1300,
+      "processed_fps": 21.59,
+      "infer_ms_per_frame": 45.9,
+      "drops": 0,
+      "realtime_factor": 1.439
+     },
+     {
+      "cam": "cam2",
+      "source": "29_1_crop.mp4",
+      "frames": 1324,
+      "processed_fps": 21.99,
+      "infer_ms_per_frame": 45.0,
+      "drops": 0,
+      "realtime_factor": 1.466
+     }
+    ],
+    "min_realtime_factor": 1.439,
+    "total_processed_fps": 65.5,
+    "demo_ok": true
+   },
+   {
+    "streams": 1,
+    "transport": "http",
+    "wall_s": 60.06,
+    "per_stream": [
+     {
+      "cam": "cam0",
+      "source": "http://127.0.0.1:8710/video",
+      "frames": 901,
+      "processed_fps": 15.0,
+      "infer_ms_per_frame": 33.4,
+      "drops": 0,
+      "frames_from_camera": 901,
+      "keep_ratio": 1.0
+     }
+    ],
+    "min_keep_ratio": 1.0,
+    "total_processed_fps": 15.0,
+    "demo_ok": true
+   },
+   {
+    "streams": 2,
+    "transport": "http",
+    "wall_s": 60.06,
+    "per_stream": [
+     {
+      "cam": "cam0",
+      "source": "http://127.0.0.1:8710/video",
+      "frames": 902,
+      "processed_fps": 15.02,
+      "infer_ms_per_frame": 28.7,
+      "drops": 0,
+      "frames_from_camera": 901,
+      "keep_ratio": 1.001
+     },
+     {
+      "cam": "cam1",
+      "source": "http://127.0.0.1:8711/video",
+      "frames": 901,
+      "processed_fps": 15.0,
+      "infer_ms_per_frame": 29.0,
+      "drops": 0,
+      "frames_from_camera": 901,
+      "keep_ratio": 1.0
+     }
+    ],
+    "min_keep_ratio": 1.0,
+    "total_processed_fps": 30.02,
+    "demo_ok": true
+   },
+   {
+    "streams": 3,
+    "transport": "http",
+    "wall_s": 60.06,
+    "per_stream": [
+     {
+      "cam": "cam0",
+      "source": "http://127.0.0.1:8710/video",
+      "frames": 898,
+      "processed_fps": 14.95,
+      "infer_ms_per_frame": 38.5,
+      "drops": 0,
+      "frames_from_camera": 901,
+      "keep_ratio": 0.997
+     },
+     {
+      "cam": "cam1",
+      "source": "http://127.0.0.1:8711/video",
+      "frames": 898,
+      "processed_fps": 14.95,
+      "infer_ms_per_frame": 35.1,
+      "drops": 0,
+      "frames_from_camera": 901,
+      "keep_ratio": 0.997
+     },
+     {
+      "cam": "cam2",
+      "source": "http://127.0.0.1:8712/video",
+      "frames": 897,
+      "processed_fps": 14.93,
+      "infer_ms_per_frame": 37.3,
+      "drops": 0,
+      "frames_from_camera": 901,
+      "keep_ratio": 0.996
+     }
+    ],
+    "min_keep_ratio": 0.996,
+    "total_processed_fps": 44.83,
+    "demo_ok": true
+   }
+  ]
+ },
+ "prior": {
+  "name": "1-stream realtime factor in X1 (phase C script)",
+  "value": 2.5,
+  "tolerance": 0.7
+ },
+ "max_demo_streams_file": 3,
+ "max_demo_streams_http": 3,
+ "notes": "file = capacity (unpaced); http = phone-like MJPEG URL at real time, keep_ratio < 1 means frames were skipped (the floor map still updates, at a lower rate). Demo uses stream counts that are demo_ok."
+}

@@ -1,0 +1,21 @@
+{
+  "session": "20261005-082937-098-synth_aisle",
+  "site": "synth_aisle",
+  "mode": "replay",
+  "speed": 1.0,
+  "label": "Synthetic scenario (labelled generator rows, not real people)",
+  "running": false,
+  "error": null,
+  "n_events": 283,
+  "n_tracks": 4,
+  "batches": 283,
+  "media_seconds": 19.927,
+  "wall_seconds": 19.922,
+  "fps_effective": 14.155,
+  "realtime_factor": 1.0,
+  "source": {},
+  "fallback": null,
+  "seconds_requested": 20.0,
+  "wall_total_s": 20.14,
+  "notes": "fps_effective/realtime_factor measured from first batch to last (excludes model load); video headless runs unpaced, so realtime_factor is processing capacity"
+}

@@ -1,0 +1,247 @@
+{
+ "name": "tips_demo",
+ "data": "synthetic (labelled generator rows, not real people)",
+ "note": "Demo of tip and diff output; never claimed as accuracy [A29].",
+ "config": {
+  "scenario": "block_eval",
+  "seed": 0,
+  "after": "same scenario and seed with n_block: 0",
+  "walkway_rule": "lingerer = speed < 0.3 m/s for >= 5 s; shelf_front lingerer -> BROWSE; walkway lingerer with >= 2 other moving tracks within 2 m during its stay -> BLOCK candidate; else unflagged",
+  "deadzone_rule": "UNSEEN if (births+deaths)/visitors > 0.25; else DEAD iff Poisson-low vs 5x5 neighbour median (BH-FDR 0.05) AND visitors < 0.25 x that median; DEAD not dead in previous session -> WATCH",
+  "dwell_ratio": 2.0,
+  "min_dead_cells": 2
+ },
+ "seed": 0,
+ "data_hash": "82f16803743aa54b",
+ "n": {
+  "before_rows": 76324,
+  "after_rows": 35697,
+  "before_staged_blocks": 24,
+  "after_staged_blocks": 0
+ },
+ "metric": {
+  "before": {
+   "block_flags": 24,
+   "browse_flags": 24,
+   "tips": [
+    {
+     "kind": "BLOCK",
+     "zone": "Main walkway",
+     "severity": 3,
+     "count": 24,
+     "text": "Main walkway was blocked 24 times: people stood in the walkway while others squeezed past. Move carts, stacked stock or displays out of the walkway.",
+     "id": "BLOCK:Main walkway"
+    },
+    {
+     "kind": "DEAD",
+     "zone": "Dairy",
+     "severity": 3,
+     "cells": 6,
+     "text": "6 m\u00b2 of Dairy get under a quarter of their neighbours' visitors while the camera sees them well. Move a promotion or a high-demand item there, or open the route to it.",
+     "id": "DEAD:Dairy"
+    },
+    {
+     "kind": "DEAD",
+     "zone": "Drinks",
+     "severity": 3,
+     "cells": 6,
+     "text": "6 m\u00b2 of Drinks get under a quarter of their neighbours' visitors while the camera sees them well. Move a promotion or a high-demand item there, or open the route to it.",
+     "id": "DEAD:Drinks"
+    },
+    {
+     "kind": "DEAD",
+     "zone": "Snacks",
+     "severity": 3,
+     "cells": 6,
+     "text": "6 m\u00b2 of Snacks get under a quarter of their neighbours' visitors while the camera sees them well. Move a promotion or a high-demand item there, or open the route to it.",
+     "id": "DEAD:Snacks"
+    },
+    {
+     "kind": "DEAD",
+     "zone": null,
+     "severity": 2,
+     "cells": 2,
+     "text": "2 m\u00b2 of the open floor get under a quarter of their neighbours' visitors while the camera sees them well. Move a promotion or a high-demand item there, or open the route to it.",
+     "id": "DEAD:floor"
+    },
+    {
+     "kind": "BROWSE",
+     "zone": "Dairy front",
+     "severity": 1,
+     "count": 7,
+     "text": "7 browsing groups lingered at Dairy front. That is shelf engagement, not a bottleneck: keep it stocked and faced.",
+     "id": "BROWSE:Dairy front"
+    },
+    {
+     "kind": "BROWSE",
+     "zone": "Drinks front",
+     "severity": 1,
+     "count": 7,
+     "text": "7 browsing groups lingered at Drinks front. That is shelf engagement, not a bottleneck: keep it stocked and faced.",
+     "id": "BROWSE:Drinks front"
+    },
+    {
+     "kind": "BROWSE",
+     "zone": "Snacks front",
+     "severity": 1,
+     "count": 10,
+     "text": "10 browsing groups lingered at Snacks front. That is shelf engagement, not a bottleneck: keep it stocked and faced.",
+     "id": "BROWSE:Snacks front"
+    },
+    {
+     "kind": "UNSEEN",
+     "zone": "Entrance",
+     "severity": 1,
+     "cells": 4,
+     "text": "4 m\u00b2 of Entrance sit where tracks start or stop (camera edge or weak view), so their counts are not trusted. Add or move a camera before calling them dead.",
+     "id": "UNSEEN:Entrance"
+    },
+    {
+     "kind": "UNSEEN",
+     "zone": "Main walkway",
+     "severity": 1,
+     "cells": 3,
+     "text": "3 m\u00b2 of Main walkway sit where tracks start or stop (camera edge or weak view), so their counts are not trusted. Add or move a camera before calling them dead.",
+     "id": "UNSEEN:Main walkway"
+    }
+   ]
+  },
+  "after": {
+   "block_flags": 0,
+   "browse_flags": 24,
+   "tips": [
+    {
+     "kind": "DEAD",
+     "zone": "Drinks",
+     "severity": 3,
+     "cells": 6,
+     "text": "6 m\u00b2 of Drinks get under a quarter of their neighbours' visitors while the camera sees them well. Move a promotion or a high-demand item there, or open the route to it.",
+     "id": "DEAD:Drinks"
+    },
+    {
+     "kind": "DEAD",
+     "zone": "Dairy",
+     "severity": 2,
+     "cells": 4,
+     "text": "4 m\u00b2 of Dairy get under a quarter of their neighbours' visitors while the camera sees them well. Move a promotion or a high-demand item there, or open the route to it.",
+     "id": "DEAD:Dairy"
+    },
+    {
+     "kind": "DEAD",
+     "zone": "Snacks",
+     "severity": 2,
+     "cells": 3,
+     "text": "3 m\u00b2 of Snacks get under a quarter of their neighbours' visitors while the camera sees them well. Move a promotion or a high-demand item there, or open the route to it.",
+     "id": "DEAD:Snacks"
+    },
+    {
+     "kind": "BROWSE",
+     "zone": "Dairy front",
+     "severity": 1,
+     "count": 6,
+     "text": "6 browsing groups lingered at Dairy front. That is shelf engagement, not a bottleneck: keep it stocked and faced.",
+     "id": "BROWSE:Dairy front"
+    },
+    {
+     "kind": "BROWSE",
+     "zone": "Drinks front",
+     "severity": 1,
+     "count": 6,
+     "text": "6 browsing groups lingered at Drinks front. That is shelf engagement, not a bottleneck: keep it stocked and faced.",
+     "id": "BROWSE:Drinks front"
+    },
+    {
+     "kind": "BROWSE",
+     "zone": "Snacks front",
+     "severity": 1,
+     "count": 12,
+     "text": "12 browsing groups lingered at Snacks front. That is shelf engagement, not a bottleneck: keep it stocked and faced.",
+     "id": "BROWSE:Snacks front"
+    },
+    {
+     "kind": "UNSEEN",
+     "zone": "Entrance",
+     "severity": 1,
+     "cells": 4,
+     "text": "4 m\u00b2 of Entrance sit where tracks start or stop (camera edge or weak view), so their counts are not trusted. Add or move a camera before calling them dead.",
+     "id": "UNSEEN:Entrance"
+    },
+    {
+     "kind": "UNSEEN",
+     "zone": "Main walkway",
+     "severity": 1,
+     "cells": 3,
+     "text": "3 m\u00b2 of Main walkway sit where tracks start or stop (camera edge or weak view), so their counts are not trusted. Add or move a camera before calling them dead.",
+     "id": "UNSEEN:Main walkway"
+    }
+   ]
+  },
+  "diff": {
+   "cleared": [
+    {
+     "kind": "BLOCK",
+     "zone": "Main walkway",
+     "text": "Main walkway was blocked 24 times: people stood in the walkway while others squeezed past. Move carts, stacked stock or displays out of the walkway."
+    },
+    {
+     "kind": "DEAD",
+     "zone": null,
+     "text": "2 m\u00b2 of the open floor get under a quarter of their neighbours' visitors while the camera sees them well. Move a promotion or a high-demand item there, or open the route to it."
+    }
+   ],
+   "added": [],
+   "kept": [
+    {
+     "kind": "DEAD",
+     "zone": "Drinks",
+     "text": "6 m\u00b2 of Drinks get under a quarter of their neighbours' visitors while the camera sees them well. Move a promotion or a high-demand item there, or open the route to it."
+    },
+    {
+     "kind": "DEAD",
+     "zone": "Dairy",
+     "text": "4 m\u00b2 of Dairy get under a quarter of their neighbours' visitors while the camera sees them well. Move a promotion or a high-demand item there, or open the route to it."
+    },
+    {
+     "kind": "DEAD",
+     "zone": "Snacks",
+     "text": "3 m\u00b2 of Snacks get under a quarter of their neighbours' visitors while the camera sees them well. Move a promotion or a high-demand item there, or open the route to it."
+    },
+    {
+     "kind": "BROWSE",
+     "zone": "Dairy front",
+     "text": "6 browsing groups lingered at Dairy front. That is shelf engagement, not a bottleneck: keep it stocked and faced."
+    },
+    {
+     "kind": "BROWSE",
+     "zone": "Drinks front",
+     "text": "6 browsing groups lingered at Drinks front. That is shelf engagement, not a bottleneck: keep it stocked and faced."
+    },
+    {
+     "kind": "BROWSE",
+     "zone": "Snacks front",
+     "text": "12 browsing groups lingered at Snacks front. That is shelf engagement, not a bottleneck: keep it stocked and faced."
+    },
+    {
+     "kind": "UNSEEN",
+     "zone": "Entrance",
+     "text": "4 m\u00b2 of Entrance sit where tracks start or stop (camera edge or weak view), so their counts are not trusted. Add or move a camera before calling them dead."
+    },
+    {
+     "kind": "UNSEEN",
+     "zone": "Main walkway",
+     "text": "3 m\u00b2 of Main walkway sit where tracks start or stop (camera edge or weak view), so their counts are not trusted. Add or move a camera before calling them dead."
+    }
+   ]
+  }
+ },
+ "prior": null,
+ "headline": [
+  {
+   "metric": "BLOCK tips cleared after removing walkway blocks",
+   "data": "synthetic",
+   "count": 1,
+   "before_block_flags": 24,
+   "after_block_flags": 0
+  }
+ ]
+}

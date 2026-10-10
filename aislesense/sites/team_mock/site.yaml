@@ -1,0 +1,35 @@
+id: team_mock
+name: Mock team site from MERL clips 21_1, 22_1
+kind: video
+label: Mock team footage (MERL clips; plumbing proof, not accuracy)
+floor:
+  x0: 0.0
+  y0: 0.0
+  width: 4.6
+  height: 3.4
+  cell: 1.0
+fps: 30
+stride: 2
+loop: false
+cameras:
+- id: phone1
+  source: merl_x/Videos_MERL_Shopping_Dataset/21_1_crop.mp4
+  image_points:
+  - - 0
+    - 680
+  - - 920
+    - 680
+  - - 920
+    - 0
+  - - 0
+    - 0
+  floor_points:
+  - - 0
+    - 0
+  - - 4.6
+    - 0
+  - - 4.6
+    - 3.4
+  - - 0
+    - 3.4
+track_buffer: 200

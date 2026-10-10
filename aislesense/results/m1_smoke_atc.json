@@ -1,0 +1,20 @@
+{
+  "session": "20261004-231117-822-atc",
+  "site": "atc",
+  "mode": "replay",
+  "speed": 600.0,
+  "label": "Trajectory replay of ATC mall sensor tracks (no CV; positions from the dataset)",
+  "running": false,
+  "error": null,
+  "n_events": 356176,
+  "n_tracks": 9573,
+  "batches": 18031,
+  "media_seconds": 18030.0,
+  "wall_seconds": 30.031,
+  "fps_effective": 600.38,
+  "realtime_factor": 600.38,
+  "source": {},
+  "seconds_requested": 30.0,
+  "wall_total_s": 33.359,
+  "notes": "fps_effective/realtime_factor measured from first batch to last (excludes model load); video headless runs unpaced, so realtime_factor is processing capacity"
+}

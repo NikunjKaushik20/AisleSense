@@ -1,0 +1,4 @@
+{"type": "FeatureCollection", "features": [
+ {"type": "Feature", "properties": {"name": "Shelf A", "kind": "section"}, "geometry": {"type": "Polygon", "coordinates": [[[0,0],[2.3,0],[2.3,3.4],[0,3.4],[0,0]]]}},
+ {"type": "Feature", "properties": {"name": "Shelf B", "kind": "section"}, "geometry": {"type": "Polygon", "coordinates": [[[2.3,0],[4.6,0],[4.6,3.4],[2.3,3.4],[2.3,0]]]}}
+]}

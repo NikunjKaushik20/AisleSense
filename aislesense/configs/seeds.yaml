@@ -1,0 +1,6 @@
+# Every random seed the evaluation uses (M6 reproducibility). tests/test_m6_repro.py checks these match the code.
+atc_deadzone_injection: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]   # eval/atc_deadzone.py SEEDS (X11 blind/ignored injection)
+synth_block_scenarios: [0, 1, 2, 3, 4]                    # eval/synth_block.py SEEDS
+tips_demo: 0                                              # eval/tips_demo.py SEED
+deadzones_api_injection: 0                                # /api/deadzones?keep<1 (docs/api.md)
+synth_aisle_sessions: {s1: 101, s2: 102}                  # sites/synth_aisle/sessions.yaml

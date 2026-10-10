@@ -1,0 +1,708 @@
+{
+ "name": "atc_deadzone",
+ "data": "ATC mall trajectories (real sensor tracks, trajectory replay; no CV) 2012-11-14 + 2012-11-21; injection is synthetic on real tracks",
+ "config": {
+  "cell_m": 1.0,
+  "grid": [
+   90,
+   53
+  ],
+  "keep": 0.01,
+  "seeds": [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9
+  ],
+  "days": [
+   "20121114",
+   "20121121"
+  ],
+  "decile_rule": "observed cell with visitors <= 10th percentile of observed cells",
+  "aware_rule": "UNSEEN if (births+deaths)/visitors > 0.25; else DEAD iff Poisson-low vs 5x5 neighbour median (BH-FDR 0.05) AND visitors < 0.25 x that median; DEAD not dead in previous session -> WATCH"
+ },
+ "seed": "patch seeds 0-9, keep rng 100+seed",
+ "data_hash": "b4b205dc5924d35b",
+ "n": {
+  "blind_cells_pooled": 656,
+  "ignored_cells_pooled": 656
+ },
+ "metric": {
+  "blind": {
+   "cells_pooled": 656,
+   "patches_pooled": 41,
+   "aware_unseen_pooled": 616,
+   "aware_unseen_rate_pooled": 0.939024,
+   "unobserved_pooled": 40,
+   "decile": {
+    "dead_pooled": 416,
+    "dead_rate_pooled": 0.634146,
+    "per_day": {
+     "20121114": {
+      "dead": 178,
+      "cells": 320,
+      "rate": 0.55625
+     },
+     "20121121": {
+      "dead": 238,
+      "cells": 336,
+      "rate": 0.708333
+     }
+    },
+    "per_seed_dead_range": [
+     16,
+     28
+    ]
+   },
+   "aware": {
+    "dead_pooled": 0,
+    "dead_rate_pooled": 0.0,
+    "per_day": {
+     "20121114": {
+      "dead": 0,
+      "cells": 320,
+      "rate": 0.0
+     },
+     "20121121": {
+      "dead": 0,
+      "cells": 336,
+      "rate": 0.0
+     }
+    },
+    "per_seed_dead_range": [
+     0,
+     0
+    ]
+   }
+  },
+  "ignored": {
+   "cells_pooled": 656,
+   "patches_pooled": 41,
+   "aware_unseen_pooled": 34,
+   "aware_unseen_rate_pooled": 0.051829,
+   "unobserved_pooled": 63,
+   "decile": {
+    "dead_pooled": 430,
+    "dead_rate_pooled": 0.655488,
+    "per_day": {
+     "20121114": {
+      "dead": 201,
+      "cells": 320,
+      "rate": 0.628125
+     },
+     "20121121": {
+      "dead": 229,
+      "cells": 336,
+      "rate": 0.681548
+     }
+    },
+    "per_seed_dead_range": [
+     14,
+     31
+    ]
+   },
+   "aware": {
+    "dead_pooled": 410,
+    "dead_rate_pooled": 0.625,
+    "per_day": {
+     "20121114": {
+      "dead": 225,
+      "cells": 320,
+      "rate": 0.703125
+     },
+     "20121121": {
+      "dead": 185,
+      "cells": 336,
+      "rate": 0.550595
+     }
+    },
+    "per_seed_dead_range": [
+     14,
+     27
+    ]
+   }
+  },
+  "per_day_baseline": {
+   "20121114": {
+    "person_s": 710485,
+    "ids": 18145,
+    "observed_cells": 1330,
+    "decile_dead": 143,
+    "aware_dead": 118,
+    "decile_dead_on_edge_share": 0.958042,
+    "aware_dead_on_edge_share": 0.70339,
+    "decile_dead_within_2m_of_edge_share": 0.993007,
+    "aware_dead_within_2m_of_edge_share": 0.79661
+   },
+   "20121121": {
+    "person_s": 1062687,
+    "ids": 22227,
+    "observed_cells": 1344,
+    "decile_dead": 149,
+    "aware_dead": 114,
+    "decile_dead_on_edge_share": 0.973154,
+    "aware_dead_on_edge_share": 0.701754,
+    "decile_dead_within_2m_of_edge_share": 0.986577,
+    "aware_dead_within_2m_of_edge_share": 0.798246
+   }
+  }
+ },
+ "prior": {
+  "name": "decile rule (the common baseline)",
+  "blind_dead_rate": 0.634146,
+  "ignored_dead_rate": 0.655488
+ },
+ "headline": [
+  {
+   "metric": "blind busy cells called DEAD (false alarm), pooled",
+   "arm": "decile",
+   "value": 0.634146,
+   "count": 416,
+   "of": 656,
+   "unit": "per injected cell, 10 seeds x 2 days"
+  },
+  {
+   "metric": "ignored cells called DEAD (hit), pooled",
+   "arm": "decile",
+   "value": 0.655488,
+   "count": 430,
+   "of": 656
+  },
+  {
+   "metric": "blind busy cells called DEAD (false alarm), pooled",
+   "arm": "aware",
+   "value": 0.0,
+   "count": 0,
+   "of": 656,
+   "per_seed_dead_range": [
+    0,
+    0
+   ],
+   "unit": "per injected cell, 10 seeds x 2 days"
+  },
+  {
+   "metric": "blind busy cells shaded UNSEEN (coverage gate), pooled",
+   "arm": "aware",
+   "value": 0.939024,
+   "count": 616,
+   "of": 656
+  },
+  {
+   "metric": "ignored cells called DEAD (hit), pooled",
+   "arm": "aware",
+   "value": 0.625,
+   "count": 410,
+   "of": 656
+  },
+  {
+   "metric": "day-1 decile DEAD cells on coverage edge",
+   "arm": "decile",
+   "value": 0.958042
+  }
+ ],
+ "expected_X2_X11": {
+  "blind_decile_dead": 0.634,
+  "ignored_decile_dead": 0.655,
+  "day1_decile_on_edge": 0.958,
+  "blind_aware_dead": 0.0,
+  "blind_aware_unknown": 0.939,
+  "ignored_aware_dead": 0.625,
+  "blind_cells_pooled": 656
+ },
+ "origin": {
+  "X0": -41.441669,
+  "Y0": -27.825001,
+  "nx": 90,
+  "ny": 53,
+  "cell_m": 1.0,
+  "fixed_to": "20121114"
+ },
+ "rows": [
+  {
+   "day": "20121114",
+   "seed": 0,
+   "test": "blind",
+   "cells": 32,
+   "visitors_before": 365.59375,
+   "visitors_after": 4.09375,
+   "unobserved": 1,
+   "aware_unseen": 31,
+   "decile_dead": 19,
+   "aware_dead": 0
+  },
+  {
+   "day": "20121114",
+   "seed": 0,
+   "test": "ignored",
+   "cells": 32,
+   "visitors_before": 365.59375,
+   "visitors_after": 2.78125,
+   "unobserved": 4,
+   "aware_unseen": 2,
+   "decile_dead": 21,
+   "aware_dead": 22
+  },
+  {
+   "day": "20121114",
+   "seed": 1,
+   "test": "blind",
+   "cells": 32,
+   "visitors_before": 369.71875,
+   "visitors_after": 3.6875,
+   "unobserved": 2,
+   "aware_unseen": 30,
+   "decile_dead": 19,
+   "aware_dead": 0
+  },
+  {
+   "day": "20121114",
+   "seed": 1,
+   "test": "ignored",
+   "cells": 32,
+   "visitors_before": 369.71875,
+   "visitors_after": 5.25,
+   "unobserved": 0,
+   "aware_unseen": 0,
+   "decile_dead": 16,
+   "aware_dead": 23
+  },
+  {
+   "day": "20121114",
+   "seed": 2,
+   "test": "blind",
+   "cells": 32,
+   "visitors_before": 370.6875,
+   "visitors_after": 4.5,
+   "unobserved": 1,
+   "aware_unseen": 31,
+   "decile_dead": 19,
+   "aware_dead": 0
+  },
+  {
+   "day": "20121114",
+   "seed": 2,
+   "test": "ignored",
+   "cells": 32,
+   "visitors_before": 370.6875,
+   "visitors_after": 3.34375,
+   "unobserved": 3,
+   "aware_unseen": 0,
+   "decile_dead": 20,
+   "aware_dead": 22
+  },
+  {
+   "day": "20121114",
+   "seed": 3,
+   "test": "blind",
+   "cells": 32,
+   "visitors_before": 426.40625,
+   "visitors_after": 4.375,
+   "unobserved": 4,
+   "aware_unseen": 28,
+   "decile_dead": 16,
+   "aware_dead": 0
+  },
+  {
+   "day": "20121114",
+   "seed": 3,
+   "test": "ignored",
+   "cells": 32,
+   "visitors_before": 426.40625,
+   "visitors_after": 4.5,
+   "unobserved": 0,
+   "aware_unseen": 0,
+   "decile_dead": 20,
+   "aware_dead": 20
+  },
+  {
+   "day": "20121114",
+   "seed": 4,
+   "test": "blind",
+   "cells": 32,
+   "visitors_before": 383.6875,
+   "visitors_after": 4.15625,
+   "unobserved": 1,
+   "aware_unseen": 31,
+   "decile_dead": 19,
+   "aware_dead": 0
+  },
+  {
+   "day": "20121114",
+   "seed": 4,
+   "test": "ignored",
+   "cells": 32,
+   "visitors_before": 383.6875,
+   "visitors_after": 5.6875,
+   "unobserved": 0,
+   "aware_unseen": 0,
+   "decile_dead": 14,
+   "aware_dead": 24
+  },
+  {
+   "day": "20121114",
+   "seed": 5,
+   "test": "blind",
+   "cells": 32,
+   "visitors_before": 383.6875,
+   "visitors_after": 3.6875,
+   "unobserved": 2,
+   "aware_unseen": 30,
+   "decile_dead": 18,
+   "aware_dead": 0
+  },
+  {
+   "day": "20121114",
+   "seed": 5,
+   "test": "ignored",
+   "cells": 32,
+   "visitors_before": 383.6875,
+   "visitors_after": 3.8125,
+   "unobserved": 0,
+   "aware_unseen": 1,
+   "decile_dead": 22,
+   "aware_dead": 23
+  },
+  {
+   "day": "20121114",
+   "seed": 6,
+   "test": "blind",
+   "cells": 32,
+   "visitors_before": 335.78125,
+   "visitors_after": 4.3125,
+   "unobserved": 2,
+   "aware_unseen": 30,
+   "decile_dead": 16,
+   "aware_dead": 0
+  },
+  {
+   "day": "20121114",
+   "seed": 6,
+   "test": "ignored",
+   "cells": 32,
+   "visitors_before": 335.78125,
+   "visitors_after": 3.40625,
+   "unobserved": 1,
+   "aware_unseen": 1,
+   "decile_dead": 23,
+   "aware_dead": 22
+  },
+  {
+   "day": "20121114",
+   "seed": 7,
+   "test": "blind",
+   "cells": 32,
+   "visitors_before": 380.78125,
+   "visitors_after": 4.03125,
+   "unobserved": 2,
+   "aware_unseen": 30,
+   "decile_dead": 17,
+   "aware_dead": 0
+  },
+  {
+   "day": "20121114",
+   "seed": 7,
+   "test": "ignored",
+   "cells": 32,
+   "visitors_before": 380.78125,
+   "visitors_after": 3.3125,
+   "unobserved": 1,
+   "aware_unseen": 1,
+   "decile_dead": 25,
+   "aware_dead": 23
+  },
+  {
+   "day": "20121114",
+   "seed": 8,
+   "test": "blind",
+   "cells": 32,
+   "visitors_before": 346.9375,
+   "visitors_after": 3.96875,
+   "unobserved": 1,
+   "aware_unseen": 31,
+   "decile_dead": 18,
+   "aware_dead": 0
+  },
+  {
+   "day": "20121114",
+   "seed": 8,
+   "test": "ignored",
+   "cells": 32,
+   "visitors_before": 346.9375,
+   "visitors_after": 4.09375,
+   "unobserved": 1,
+   "aware_unseen": 0,
+   "decile_dead": 20,
+   "aware_dead": 23
+  },
+  {
+   "day": "20121114",
+   "seed": 9,
+   "test": "blind",
+   "cells": 32,
+   "visitors_before": 417.625,
+   "visitors_after": 4.65625,
+   "unobserved": 1,
+   "aware_unseen": 31,
+   "decile_dead": 17,
+   "aware_dead": 0
+  },
+  {
+   "day": "20121114",
+   "seed": 9,
+   "test": "ignored",
+   "cells": 32,
+   "visitors_before": 417.625,
+   "visitors_after": 4.25,
+   "unobserved": 1,
+   "aware_unseen": 1,
+   "decile_dead": 20,
+   "aware_dead": 23
+  },
+  {
+   "day": "20121121",
+   "seed": 0,
+   "test": "blind",
+   "cells": 32,
+   "visitors_before": 273.5625,
+   "visitors_after": 3.5625,
+   "unobserved": 0,
+   "aware_unseen": 32,
+   "decile_dead": 24,
+   "aware_dead": 0
+  },
+  {
+   "day": "20121121",
+   "seed": 0,
+   "test": "ignored",
+   "cells": 32,
+   "visitors_before": 273.5625,
+   "visitors_after": 2.75,
+   "unobserved": 4,
+   "aware_unseen": 3,
+   "decile_dead": 19,
+   "aware_dead": 18
+  },
+  {
+   "day": "20121121",
+   "seed": 1,
+   "test": "blind",
+   "cells": 32,
+   "visitors_before": 274.78125,
+   "visitors_after": 3.4375,
+   "unobserved": 2,
+   "aware_unseen": 30,
+   "decile_dead": 23,
+   "aware_dead": 0
+  },
+  {
+   "day": "20121121",
+   "seed": 1,
+   "test": "ignored",
+   "cells": 32,
+   "visitors_before": 274.78125,
+   "visitors_after": 2.53125,
+   "unobserved": 3,
+   "aware_unseen": 3,
+   "decile_dead": 24,
+   "aware_dead": 18
+  },
+  {
+   "day": "20121121",
+   "seed": 2,
+   "test": "blind",
+   "cells": 32,
+   "visitors_before": 230.875,
+   "visitors_after": 2.625,
+   "unobserved": 0,
+   "aware_unseen": 32,
+   "decile_dead": 27,
+   "aware_dead": 0
+  },
+  {
+   "day": "20121121",
+   "seed": 2,
+   "test": "ignored",
+   "cells": 32,
+   "visitors_before": 230.875,
+   "visitors_after": 2.09375,
+   "unobserved": 4,
+   "aware_unseen": 2,
+   "decile_dead": 23,
+   "aware_dead": 19
+  },
+  {
+   "day": "20121121",
+   "seed": 3,
+   "test": "blind",
+   "cells": 48,
+   "visitors_before": 243.25,
+   "visitors_after": 2.979167,
+   "unobserved": 7,
+   "aware_unseen": 41,
+   "decile_dead": 24,
+   "aware_dead": 0
+  },
+  {
+   "day": "20121121",
+   "seed": 3,
+   "test": "ignored",
+   "cells": 48,
+   "visitors_before": 243.25,
+   "visitors_after": 2.125,
+   "unobserved": 8,
+   "aware_unseen": 2,
+   "decile_dead": 31,
+   "aware_dead": 27
+  },
+  {
+   "day": "20121121",
+   "seed": 4,
+   "test": "blind",
+   "cells": 32,
+   "visitors_before": 263.5,
+   "visitors_after": 2.90625,
+   "unobserved": 4,
+   "aware_unseen": 28,
+   "decile_dead": 21,
+   "aware_dead": 0
+  },
+  {
+   "day": "20121121",
+   "seed": 4,
+   "test": "ignored",
+   "cells": 32,
+   "visitors_before": 263.5,
+   "visitors_after": 2.15625,
+   "unobserved": 9,
+   "aware_unseen": 2,
+   "decile_dead": 18,
+   "aware_dead": 14
+  },
+  {
+   "day": "20121121",
+   "seed": 5,
+   "test": "blind",
+   "cells": 32,
+   "visitors_before": 261.28125,
+   "visitors_after": 3.03125,
+   "unobserved": 3,
+   "aware_unseen": 29,
+   "decile_dead": 23,
+   "aware_dead": 0
+  },
+  {
+   "day": "20121121",
+   "seed": 5,
+   "test": "ignored",
+   "cells": 32,
+   "visitors_before": 261.28125,
+   "visitors_after": 2.75,
+   "unobserved": 3,
+   "aware_unseen": 6,
+   "decile_dead": 22,
+   "aware_dead": 17
+  },
+  {
+   "day": "20121121",
+   "seed": 6,
+   "test": "blind",
+   "cells": 32,
+   "visitors_before": 272.375,
+   "visitors_after": 3.53125,
+   "unobserved": 1,
+   "aware_unseen": 31,
+   "decile_dead": 21,
+   "aware_dead": 0
+  },
+  {
+   "day": "20121121",
+   "seed": 6,
+   "test": "ignored",
+   "cells": 32,
+   "visitors_before": 272.375,
+   "visitors_after": 1.71875,
+   "unobserved": 7,
+   "aware_unseen": 3,
+   "decile_dead": 22,
+   "aware_dead": 18
+  },
+  {
+   "day": "20121121",
+   "seed": 7,
+   "test": "blind",
+   "cells": 32,
+   "visitors_before": 232.46875,
+   "visitors_after": 3.0,
+   "unobserved": 2,
+   "aware_unseen": 30,
+   "decile_dead": 23,
+   "aware_dead": 0
+  },
+  {
+   "day": "20121121",
+   "seed": 7,
+   "test": "ignored",
+   "cells": 32,
+   "visitors_before": 232.46875,
+   "visitors_after": 2.34375,
+   "unobserved": 6,
+   "aware_unseen": 4,
+   "decile_dead": 21,
+   "aware_dead": 18
+  },
+  {
+   "day": "20121121",
+   "seed": 8,
+   "test": "blind",
+   "cells": 32,
+   "visitors_before": 229.90625,
+   "visitors_after": 2.71875,
+   "unobserved": 2,
+   "aware_unseen": 30,
+   "decile_dead": 28,
+   "aware_dead": 0
+  },
+  {
+   "day": "20121121",
+   "seed": 8,
+   "test": "ignored",
+   "cells": 32,
+   "visitors_before": 229.90625,
+   "visitors_after": 1.5625,
+   "unobserved": 6,
+   "aware_unseen": 0,
+   "decile_dead": 24,
+   "aware_dead": 17
+  },
+  {
+   "day": "20121121",
+   "seed": 9,
+   "test": "blind",
+   "cells": 32,
+   "visitors_before": 261.28125,
+   "visitors_after": 3.21875,
+   "unobserved": 2,
+   "aware_unseen": 30,
+   "decile_dead": 24,
+   "aware_dead": 0
+  },
+  {
+   "day": "20121121",
+   "seed": 9,
+   "test": "ignored",
+   "cells": 32,
+   "visitors_before": 261.28125,
+   "visitors_after": 2.71875,
+   "unobserved": 2,
+   "aware_unseen": 3,
+   "decile_dead": 25,
+   "aware_dead": 19
+  }
+ ]
+}

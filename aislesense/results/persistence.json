@@ -1,0 +1,77 @@
+{
+ "name": "persistence",
+ "data": "ATC mall trajectories (real sensor tracks, no CV), 2012-11-14 -> 2012-11-21",
+ "config": {
+  "rule": {
+   "tau": 0.25,
+   "fdr_q": 0.05,
+   "ratio": 0.25,
+   "window": 5,
+   "min_neigh": 5,
+   "version": "v2 (frozen after X7)",
+   "text": "UNSEEN if (births+deaths)/visitors > 0.25; else DEAD iff Poisson-low vs 5x5 neighbour median (BH-FDR 0.05) AND visitors < 0.25 x that median; DEAD not dead in previous session -> WATCH"
+  },
+  "origin": {
+   "X0": -41.441669,
+   "Y0": -27.825001,
+   "nx": 90,
+   "ny": 53,
+   "fixed_to": "20121114"
+  },
+  "busy": "day-2 visitors >= day-2 median over observed cells",
+  "day2_median_visitors": 126.0
+ },
+ "seed": null,
+ "data_hash": "b4b205dc5924d35b",
+ "n": {
+  "day1_aware_dead": 118,
+  "day1_decile_dead": 143
+ },
+ "metric": {
+  "aware": {
+   "day1_dead": 118,
+   "day2_dead": 114,
+   "still_dead_day2": 66,
+   "unseen_day2": 36,
+   "busy_day2": 23,
+   "busy_day2_share": 0.194915,
+   "jaccard": 0.39759,
+   "day2_watch": 48,
+   "day2_dead_and_dead_day1": 66
+  },
+  "decile": {
+   "day1_dead": 143,
+   "busy_day2": 3,
+   "jaccard": 0.364486
+  },
+  "unseen_jaccard": 0.605691
+ },
+ "prior": {
+  "name": "decile rule (the common baseline)",
+  "day1_dead": 143,
+  "busy_day2": 3,
+  "jaccard": 0.364486
+ },
+ "headline": [
+  {
+   "metric": "day-1 aware DEAD cells busy one week later",
+   "arm": "aware",
+   "value": 0.194915,
+   "count": 23,
+   "of": 118,
+   "unit": "1 m cells"
+  },
+  {
+   "metric": "day-2 DEAD cells shown as WATCH (not dead the week before)",
+   "arm": "aware",
+   "count": 48,
+   "of": 114
+  }
+ ],
+ "expected_X9": {
+  "day1_aware_dead": 118,
+  "busy_on_day2": 23,
+  "tolerance": 2
+ },
+ "matches_expected": true
+}

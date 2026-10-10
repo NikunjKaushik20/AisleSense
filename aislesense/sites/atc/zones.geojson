@@ -1,0 +1,4 @@
+{"type": "FeatureCollection", "features": [
+ {"type": "Feature", "properties": {"name": "West hall", "kind": "section"}, "geometry": {"type": "Polygon", "coordinates": [[[-42,-28],[0,-28],[0,25],[-42,25],[-42,-28]]]}},
+ {"type": "Feature", "properties": {"name": "East hall", "kind": "section"}, "geometry": {"type": "Polygon", "coordinates": [[[0,-28],[49,-28],[49,25],[0,25],[0,-28]]]}}
+]}

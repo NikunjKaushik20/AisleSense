@@ -1,0 +1,26 @@
+{
+  "session": "20261004-231005-547-merl_demo",
+  "site": "merl_demo",
+  "mode": "live",
+  "speed": 1.0,
+  "label": "Public MERL Shopping clip looped as a live camera (1 shopper per clip)",
+  "running": false,
+  "error": null,
+  "n_events": 1536,
+  "n_tracks": 9,
+  "batches": 2197,
+  "media_seconds": 146.433,
+  "wall_seconds": 55.312,
+  "fps_effective": 39.702,
+  "realtime_factor": 2.647,
+  "source": {
+    "frames": 2198,
+    "infer_s": 54.818,
+    "stride": 2
+  },
+  "seconds_requested": 60.0,
+  "wall_total_s": 66.39,
+  "notes": "fps_effective/realtime_factor measured from first batch to last (excludes model load); video headless runs unpaced, so realtime_factor is processing capacity",
+  "model": "D:/Hacks/IITB/models/yolo11n.pt",
+  "track_buffer": 30
+}

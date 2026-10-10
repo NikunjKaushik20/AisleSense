@@ -1,0 +1,13 @@
+# AisleSense runtime (venv at <repo>/venv; install torch first with the CUDA 12.4 wheels, see README)
+torch==2.6.0
+ultralytics==8.4.21
+opencv-python
+numpy
+pandas
+scipy
+pyyaml
+py7zr
+fastapi
+uvicorn
+httpx
+pytest

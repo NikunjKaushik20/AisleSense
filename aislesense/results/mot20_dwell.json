@@ -1,0 +1,92 @@
+{
+ "name": "mot20_dwell",
+ "data": "MOT20 train (4 seqs, station crowd, public detections) - not a store",
+ "config": {
+  "tracker": {
+   "tracker_type": "bytetrack",
+   "track_high_thresh": 0.25,
+   "track_low_thresh": 0.1,
+   "new_track_thresh": 0.25,
+   "track_buffer": 30,
+   "match_thresh": 0.8,
+   "fuse_score": true
+  },
+  "zones": "3x3 image grid (A24)",
+  "match": "IoU>=0.5 Hungarian",
+  "gt_visit_min_s": 5,
+  "track_source": {
+   "MOT20-01": "nikunj cache",
+   "MOT20-02": "nikunj cache",
+   "MOT20-03": "nikunj cache",
+   "MOT20-05": "nikunj cache"
+  },
+  "prior": "leave-one-sequence-out global median GT dwell"
+ },
+ "seed": 0,
+ "data_hash": "8f6558d1eb70633c",
+ "n": {
+  "gt_visits": 3615,
+  "long_dwellers_ge15s": 380,
+  "matched_share": 0.974274
+ },
+ "metric": {
+  "span_MAE_s": 4.696288,
+  "span_bias_s": -4.163729,
+  "under_half_truth": 0.336929,
+  "AUROC_ge15s": 0.712274,
+  "recall_at_est_ge10s": 0.463158,
+  "fpr_at_est_ge10s": 0.099845
+ },
+ "prior": {
+  "span_MAE_s": 3.961029,
+  "AUROC_ge15s": 0.5
+ },
+ "per_seq": {
+  "MOT20-01": {
+   "n": 65,
+   "span_MAE": 3.209231,
+   "prior_MAE": 2.558769,
+   "prior_median_from_other_seqs": 8.84
+  },
+  "MOT20-02": {
+   "n": 458,
+   "span_MAE": 5.260611,
+   "prior_MAE": 4.357118,
+   "prior_median_from_other_seqs": 8.84
+  },
+  "MOT20-03": {
+   "n": 1106,
+   "span_MAE": 3.722604,
+   "prior_MAE": 2.663797,
+   "prior_median_from_other_seqs": 8.76
+  },
+  "MOT20-05": {
+   "n": 1986,
+   "span_MAE": 5.157059,
+   "prior_MAE": 4.638006,
+   "prior_median_from_other_seqs": 9.0
+  }
+ },
+ "headline": [
+  {
+   "metric": "per-visit span MAE",
+   "value": 4.696288,
+   "prior": 3.961029,
+   "prior_name": "LOSO global median",
+   "unit": "s per GT visit >= 5 s",
+   "beats_prior": false
+  },
+  {
+   "metric": "long-dweller AUROC (GT >= 15 s)",
+   "value": 0.712274,
+   "prior": 0.5,
+   "prior_name": "constant",
+   "beats_prior": true
+  }
+ ],
+ "expected_X5": {
+  "span_MAE_s": 4.7,
+  "prior_MAE_s": 3.96,
+  "AUROC_ge15s": 0.712
+ }
+}

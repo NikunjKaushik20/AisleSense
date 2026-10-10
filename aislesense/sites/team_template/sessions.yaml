@@ -1,0 +1,3 @@
+# tuning reads only tune sessions; score sessions are locked after one scored run
+tune: [s1]
+score: [s2]

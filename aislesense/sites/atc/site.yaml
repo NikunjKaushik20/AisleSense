@@ -1,0 +1,9 @@
+id: atc
+name: ATC mall (Osaka) trajectory replay
+kind: atc
+label: Trajectory replay of ATC mall sensor tracks (no CV; positions from the dataset)
+floor: {x0: -42.0, y0: -28.0, width: 91.0, height: 53.0, cell: 1.0}
+day: atc_x/atc-20121114.npz
+# dataset positions are mm; ingest converts to m and averages to 1 Hz per person
+hz: 1
+cameras: []

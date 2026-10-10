@@ -1,0 +1,7 @@
+id: synth_aisle
+name: Synthetic aisle (generator scenario)
+kind: synth
+label: Synthetic scenario (labelled generator rows, not real people)
+floor: {x0: 0.0, y0: 0.0, width: 20.0, height: 10.0, cell: 1.0}
+scenario: scenario.yaml
+cameras: []

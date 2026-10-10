@@ -1,0 +1,174 @@
+{
+ "name": "staged_synth",
+ "data": "synthetic",
+ "note": "On synth_aisle this proves the harness runs end to end; it is not block accuracy [A29].",
+ "config": {
+  "site": "synth_aisle",
+  "density_rule": {
+   "cell_m": 1.0,
+   "window_s": 30.0,
+   "min_person_s": 5.0,
+   "density_q": 0.9,
+   "slow_mps": 0.3,
+   "text": "cell-window (1 m x window) flagged as bottleneck iff person-seconds >= top decile of eligible cell-windows (>= 5 person-s) AND mean speed <= 0.3 m/s"
+  },
+  "window_grid": [
+   15.0,
+   30.0,
+   60.0
+  ],
+  "walkway_rule": {
+   "slow_mps": 0.3,
+   "min_s": 5.0,
+   "pass_radius_m": 2.0,
+   "min_passers": 2,
+   "max_gap_s": 2.0,
+   "speed_lag_s": 1.0,
+   "text": "lingerer = speed < 0.3 m/s for >= 5 s; shelf_front lingerer -> BROWSE; walkway lingerer with >= 2 other moving tracks within 2 m during its stay -> BLOCK candidate; else unflagged"
+  }
+ },
+ "seed": {
+  "s1": {
+   "synth_scenario": "session_eval",
+   "seed": 101
+  },
+  "s2": {
+   "synth_scenario": "session_eval",
+   "seed": 102
+  }
+ },
+ "data_hash": "a949a5cb301c3205",
+ "sessions": {
+  "tune": [
+   "s1"
+  ],
+  "score": [
+   "s2"
+  ]
+ },
+ "access_log": [
+  [
+   "tune",
+   "s1"
+  ],
+  [
+   "score",
+   "s2"
+  ]
+ ],
+ "tuned": {
+  "window_s": 15.0,
+  "window_grid_tune_recall_minus_fa": {
+   "15.0": 0.227273,
+   "30.0": 0.227273,
+   "60.0": 0.090909
+  },
+  "tune_sessions": [
+   "s1"
+  ]
+ },
+ "n": {
+  "block_events": 22,
+  "browse_events": 22
+ },
+ "metric": {
+  "arms": {
+   "density": {
+    "block_recall": 0.545455,
+    "browse_false_alarm": 0.454545,
+    "n_block": 22,
+    "n_browse": 22,
+    "blocks_flagged": 12,
+    "browses_flagged": 10
+   },
+   "walkway": {
+    "block_recall": 1.0,
+    "browse_false_alarm": 0.0,
+    "n_block": 22,
+    "n_browse": 22,
+    "blocks_flagged": 22,
+    "browses_flagged": 0
+   }
+  },
+  "per_session": {
+   "s2": {
+    "density": {
+     "block": {
+      "n": 22,
+      "flagged": 12,
+      "rate": 0.545455
+     },
+     "browse": {
+      "n": 22,
+      "flagged": 10,
+      "rate": 0.454545
+     },
+     "flags_total": 35,
+     "flags_outside_events": 0
+    },
+    "walkway": {
+     "block": {
+      "n": 22,
+      "flagged": 22,
+      "rate": 1.0
+     },
+     "browse": {
+      "n": 22,
+      "flagged": 0,
+      "rate": 0.0
+     },
+     "flags_total": 22,
+     "flags_outside_events": 0
+    }
+   }
+  }
+ },
+ "prior": {
+  "flag_nothing": {
+   "block_recall": 0.0,
+   "browse_false_alarm": 0.0
+  },
+  "flag_every_event": {
+   "block_recall": 1.0,
+   "browse_false_alarm": 1.0
+  }
+ },
+ "headline": [
+  {
+   "metric": "block recall / browse false alarm (density baseline)",
+   "arm": "density",
+   "value": 0.545455,
+   "browse_false_alarm": 0.454545,
+   "data": "synthetic"
+  },
+  {
+   "metric": "block recall / browse false alarm (walkway rule)",
+   "arm": "walkway",
+   "value": 1.0,
+   "browse_false_alarm": 0.0,
+   "data": "synthetic"
+  }
+ ],
+ "score_lock": {
+  "lock": "var/locks/synth_aisle_s2_events.lock",
+  "n_scored_runs": 9,
+  "force_rescore": true,
+  "synthetic": true,
+  "rule_hash": "88fa95fcc663f92d",
+  "rule_hash_first": "88fa95fcc663f92d",
+  "rule_changed_since_first_score": false,
+  "runs_before_rule_hash": 8,
+  "script": "staged_events",
+  "tuned": {
+   "window_s": 15.0,
+   "window_grid_tune_recall_minus_fa": {
+    "15.0": 0.227273,
+    "30.0": 0.227273,
+    "60.0": 0.090909
+   },
+   "tune_sessions": [
+    "s1"
+   ]
+  }
+ }
+}

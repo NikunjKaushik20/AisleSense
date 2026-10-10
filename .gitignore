@@ -1,0 +1,71 @@
+# ---- Local-only folders at the repo root -------------------------------------
+# Datasets (about 15 GB). Rebuild with: python aislesense/scripts/get_data.py
+/data/
+# YOLO weights. ultralytics downloads yolo11n.pt on first run if this is missing.
+/models/
+# Python virtual environment
+/venv/
+/.venv/
+# Research notes and planning files (not part of the app)
+/nikunj/
+
+# ---- Docs: only README.md is published ---------------------------------------
+# Rendered from docs/src/ by scripts/check_claims.py on the maintainer's machine.
+/aislesense/docs/
+
+# ---- App runtime output -------------------------------------------------------
+# SQLite DB, caches, logs, score locks, screenshots, recordings
+/aislesense/var/
+
+# ---- Python -------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# ---- Node / frontend ----------------------------------------------------------
+node_modules/
+# Built bundle. run.ps1 rebuilds it when missing.
+/aislesense/frontend/dist/
+*.tsbuildinfo
+.vite/
+npm-debug.log*
+
+# ---- Large or private media (never commit footage or weights) ---------------
+*.pt
+*.pth
+*.onnx
+*.engine
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.npz
+*.npy
+*.7z
+*.zip
+*.sqlite
+*.sqlite3
+*.db
+
+# ---- Secrets and local settings -----------------------------------------------
+.env
+.env.*
+!.env.example
+.claude/
+
+# ---- Editors and OS -----------------------------------------------------------
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+desktop.ini
+*.log
+
+# ---- Team footage (filmed sessions) ------------------------------------------
+/footage/

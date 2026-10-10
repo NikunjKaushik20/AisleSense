@@ -1,0 +1,353 @@
+{
+ "name": "synth_block",
+ "data": "synthetic",
+ "note": "Sanity check, not evidence: proves what each rule does on staged synthetic events; never claimed as block accuracy [A29].",
+ "config": {
+  "scenario": "synth/scenarios/block_eval.yaml",
+  "site": "synth_aisle",
+  "seeds": [
+   0,
+   1,
+   2,
+   3,
+   4
+  ],
+  "density_rule": {
+   "cell_m": 1.0,
+   "window_s": 30.0,
+   "min_person_s": 5.0,
+   "density_q": 0.9,
+   "slow_mps": 0.3,
+   "text": "cell-window (1 m x window) flagged as bottleneck iff person-seconds >= top decile of eligible cell-windows (>= 5 person-s) AND mean speed <= 0.3 m/s"
+  },
+  "walkway_rule": {
+   "slow_mps": 0.3,
+   "min_s": 5.0,
+   "pass_radius_m": 2.0,
+   "min_passers": 2,
+   "max_gap_s": 2.0,
+   "speed_lag_s": 1.0,
+   "text": "lingerer = speed < 0.3 m/s for >= 5 s; shelf_front lingerer -> BROWSE; walkway lingerer with >= 2 other moving tracks within 2 m during its stay -> BLOCK candidate; else unflagged"
+  },
+  "scenario_values": {
+   "hz": 5,
+   "slot_s": 90,
+   "n_block": 24,
+   "n_browse": 24,
+   "stay_s": [
+    20,
+    60
+   ],
+   "lane_y": [
+    2.5,
+    4.5
+   ],
+   "walkway": "Main walkway",
+   "passers": {
+    "rate_per_s": 0.1,
+    "speed_mps": [
+     1.0,
+     1.5
+    ]
+   },
+   "block_passers": [
+    3,
+    6
+   ],
+   "block_lingerers": [
+    2,
+    3
+   ],
+   "browse_lingerers": [
+    2,
+    3
+   ],
+   "min_visit_s": 2.0,
+   "id_breaks_per_min": 0.0
+  }
+ },
+ "seed": [
+  0,
+  1,
+  2,
+  3,
+  4
+ ],
+ "data_hash": "9c74442b8d08435d",
+ "n": {
+  "block_events": 120,
+  "browse_events": 120
+ },
+ "metric": {
+  "density": {
+   "block_recall": 0.658333,
+   "browse_false_alarm": 0.658333,
+   "n_block": 120,
+   "n_browse": 120,
+   "blocks_flagged": 79,
+   "browses_flagged": 79,
+   "flags_outside_events": 0,
+   "per_seed_browse_fa": [
+    0.625,
+    0.625,
+    0.666667,
+    0.666667,
+    0.708333
+   ],
+   "per_seed_block_recall": [
+    0.708333,
+    0.583333,
+    0.708333,
+    0.666667,
+    0.625
+   ]
+  },
+  "walkway": {
+   "block_recall": 1.0,
+   "browse_false_alarm": 0.0,
+   "n_block": 120,
+   "n_browse": 120,
+   "blocks_flagged": 120,
+   "browses_flagged": 0,
+   "flags_outside_events": 0,
+   "per_seed_browse_fa": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "per_seed_block_recall": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ]
+  }
+ },
+ "prior": {
+  "name": "density rule (baseline)",
+  "block_recall": 0.658333,
+  "browse_false_alarm": 0.658333
+ },
+ "headline": [
+  {
+   "metric": "shelf browses flagged as bottleneck by density rule",
+   "arm": "density",
+   "value": 0.658333,
+   "count": 79,
+   "of": 120,
+   "data": "synthetic"
+  },
+  {
+   "metric": "walkway blocks flagged by density rule",
+   "arm": "density",
+   "value": 0.658333,
+   "count": 79,
+   "of": 120,
+   "data": "synthetic"
+  },
+  {
+   "metric": "shelf browses flagged as bottleneck by walkway rule",
+   "arm": "walkway",
+   "value": 0.0,
+   "count": 0,
+   "of": 120,
+   "data": "synthetic"
+  },
+  {
+   "metric": "walkway blocks flagged by walkway rule",
+   "arm": "walkway",
+   "value": 1.0,
+   "count": 120,
+   "of": 120,
+   "data": "synthetic"
+  }
+ ],
+ "per_seed": [
+  {
+   "seed": 0,
+   "n_rows": 76324,
+   "n_block": 24,
+   "n_browse": 24,
+   "density": {
+    "block": {
+     "n": 24,
+     "flagged": 17,
+     "rate": 0.708333
+    },
+    "browse": {
+     "n": 24,
+     "flagged": 15,
+     "rate": 0.625
+    },
+    "flags_total": 34,
+    "flags_outside_events": 0
+   },
+   "walkway": {
+    "block": {
+     "n": 24,
+     "flagged": 24,
+     "rate": 1.0
+    },
+    "browse": {
+     "n": 24,
+     "flagged": 0,
+     "rate": 0.0
+    },
+    "flags_total": 24,
+    "flags_outside_events": 0
+   }
+  },
+  {
+   "seed": 1,
+   "n_rows": 76466,
+   "n_block": 24,
+   "n_browse": 24,
+   "density": {
+    "block": {
+     "n": 24,
+     "flagged": 14,
+     "rate": 0.583333
+    },
+    "browse": {
+     "n": 24,
+     "flagged": 15,
+     "rate": 0.625
+    },
+    "flags_total": 32,
+    "flags_outside_events": 0
+   },
+   "walkway": {
+    "block": {
+     "n": 24,
+     "flagged": 24,
+     "rate": 1.0
+    },
+    "browse": {
+     "n": 24,
+     "flagged": 0,
+     "rate": 0.0
+    },
+    "flags_total": 24,
+    "flags_outside_events": 0
+   }
+  },
+  {
+   "seed": 2,
+   "n_rows": 75561,
+   "n_block": 24,
+   "n_browse": 24,
+   "density": {
+    "block": {
+     "n": 24,
+     "flagged": 17,
+     "rate": 0.708333
+    },
+    "browse": {
+     "n": 24,
+     "flagged": 16,
+     "rate": 0.666667
+    },
+    "flags_total": 35,
+    "flags_outside_events": 0
+   },
+   "walkway": {
+    "block": {
+     "n": 24,
+     "flagged": 24,
+     "rate": 1.0
+    },
+    "browse": {
+     "n": 24,
+     "flagged": 0,
+     "rate": 0.0
+    },
+    "flags_total": 24,
+    "flags_outside_events": 0
+   }
+  },
+  {
+   "seed": 3,
+   "n_rows": 75559,
+   "n_block": 24,
+   "n_browse": 24,
+   "density": {
+    "block": {
+     "n": 24,
+     "flagged": 16,
+     "rate": 0.666667
+    },
+    "browse": {
+     "n": 24,
+     "flagged": 16,
+     "rate": 0.666667
+    },
+    "flags_total": 35,
+    "flags_outside_events": 0
+   },
+   "walkway": {
+    "block": {
+     "n": 24,
+     "flagged": 24,
+     "rate": 1.0
+    },
+    "browse": {
+     "n": 24,
+     "flagged": 0,
+     "rate": 0.0
+    },
+    "flags_total": 24,
+    "flags_outside_events": 0
+   }
+  },
+  {
+   "seed": 4,
+   "n_rows": 76521,
+   "n_block": 24,
+   "n_browse": 24,
+   "density": {
+    "block": {
+     "n": 24,
+     "flagged": 15,
+     "rate": 0.625
+    },
+    "browse": {
+     "n": 24,
+     "flagged": 17,
+     "rate": 0.708333
+    },
+    "flags_total": 37,
+    "flags_outside_events": 0
+   },
+   "walkway": {
+    "block": {
+     "n": 24,
+     "flagged": 24,
+     "rate": 1.0
+    },
+    "browse": {
+     "n": 24,
+     "flagged": 0,
+     "rate": 0.0
+    },
+    "flags_total": 24,
+    "flags_outside_events": 0
+   }
+  }
+ ],
+ "scenario_history": [
+  {
+   "version": "v1 (browse groups 1-3 people, block groups 2-3)",
+   "status": "superseded",
+   "why": "v1 confounded group size with location; v2 matches browse group size to block (2-3) so only location differs. Changed after seeing v1; both kept here.",
+   "density": {
+    "block_recall": 0.758333,
+    "browse_false_alarm": 0.416667,
+    "n_block": 120,
+    "n_browse": 120
+   }
+  }
+ ]
+}

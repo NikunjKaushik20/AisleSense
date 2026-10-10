@@ -1,0 +1,15 @@
+id: merl_demo
+name: MERL Shopping demo (looped clip as a fake camera)
+kind: video
+label: Public MERL Shopping clip looped as a live camera (1 shopper per clip)
+floor: {x0: 0.0, y0: 0.0, width: 4.6, height: 3.4, cell: 1.0}
+fps: 30
+stride: 2
+loop: true
+cameras:
+  - id: cam0
+    # relative paths resolve against AISLE_DATA (default <repo>/data)
+    source: merl_x/Videos_MERL_Shopping_Dataset/27_1_crop.mp4
+    # hand-entered 4-point homography: ceiling view, ~5 mm per px (approximate scale)
+    image_points: [[0, 680], [920, 680], [920, 0], [0, 0]]
+    floor_points: [[0, 0], [4.6, 0], [4.6, 3.4], [0, 3.4]]

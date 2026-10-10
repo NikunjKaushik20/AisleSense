@@ -1,0 +1,112 @@
+{
+ "name": "stopwatch_team_mock",
+ "data": "team footage site team_mock",
+ "config": {
+  "site": "team_mock",
+  "protocol": "stopwatch per section [A34]",
+  "estimator": "baseline per-ID timer (track runs in section polygon)",
+  "min_visit_grid": [
+   0.0,
+   1.0,
+   2.0,
+   5.0
+  ],
+  "unit": "abs error of per-section mean dwell, mean over sections"
+ },
+ "seed": {
+  "s1": {
+   "video": "merl_x/Videos_MERL_Shopping_Dataset/21_1_crop.mp4"
+  },
+  "s2": {
+   "video": "merl_x/Videos_MERL_Shopping_Dataset/22_1_crop.mp4"
+  }
+ },
+ "data_hash": "9172ad5e2074b498",
+ "sessions": {
+  "tune": [
+   "s1"
+  ],
+  "score": [
+   "s2"
+  ]
+ },
+ "access_log": [
+  [
+   "tune",
+   "s1"
+  ],
+  [
+   "score",
+   "s2"
+  ]
+ ],
+ "tuned": {
+  "prior_per_section": {
+   "Aisle": 139.87
+  },
+  "prior_global": 139.87,
+  "min_visit_grid_tune_MAE": {
+   "0.0": 137.304074,
+   "1.0": 128.173704,
+   "2.0": 125.317619,
+   "5.0": 120.896667
+  },
+  "min_visit_s": 5.0,
+  "tune_sessions": [
+   "s1"
+  ]
+ },
+ "n": {
+  "s2": {
+   "sections": 1,
+   "stopwatch_visits": 1
+  }
+ },
+ "metric": {
+  "tracker_MAE_s": 139.108333,
+  "per_session": {
+   "s2": {
+    "per_section": {
+     "Aisle": {
+      "stopwatch_mean_s": 146.5,
+      "tracker_mean_s": 7.391667,
+      "prior_mean_s": 139.87,
+      "n_stopwatch": 1,
+      "n_tracker_visits": 8
+     }
+    },
+    "tracker_MAE_s": 139.108333,
+    "prior_MAE_s": 6.63,
+    "n_sections": 1,
+    "n_stopwatch_visits": 1
+   }
+  }
+ },
+ "prior": {
+  "name": "tune-session stopwatch mean per section",
+  "MAE_s": 6.63
+ },
+ "headline": [
+  {
+   "metric": "section mean dwell MAE (per-ID timer)",
+   "value": 139.108333,
+   "prior": 6.63,
+   "unit": "s per section",
+   "beats_prior": false
+  }
+ ],
+ "score_lock": {
+  "lock": "var/locks/team_mock_s2.lock",
+  "n_scored_runs": 1,
+  "force_rescore": false,
+  "synthetic": false,
+  "rule_hash": "39b27422418ec6c2",
+  "rule_hash_first": "39b27422418ec6c2",
+  "rule_changed_since_first_score": false,
+  "runs_before_rule_hash": 0,
+  "script": "stopwatch",
+  "tuned": {
+   "min_visit_s": 5.0
+  }
+ }
+}

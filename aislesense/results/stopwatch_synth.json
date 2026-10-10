@@ -1,0 +1,138 @@
+{
+ "name": "stopwatch_synth",
+ "data": "synthetic",
+ "config": {
+  "site": "synth_aisle",
+  "protocol": "stopwatch per section [A34]",
+  "estimator": "baseline per-ID timer (track runs in section polygon)",
+  "min_visit_grid": [
+   0.0,
+   1.0,
+   2.0,
+   5.0
+  ],
+  "unit": "abs error of per-section mean dwell, mean over sections"
+ },
+ "seed": {
+  "s1": {
+   "synth_scenario": "session_eval",
+   "seed": 101
+  },
+  "s2": {
+   "synth_scenario": "session_eval",
+   "seed": 102
+  }
+ },
+ "data_hash": "a949a5cb301c3205",
+ "sessions": {
+  "tune": [
+   "s1"
+  ],
+  "score": [
+   "s2"
+  ]
+ },
+ "access_log": [
+  [
+   "tune",
+   "s1"
+  ],
+  [
+   "score",
+   "s2"
+  ]
+ ],
+ "tuned": {
+  "prior_per_section": {
+   "Dairy": 41.591667,
+   "Drinks": 41.66,
+   "Entrance": 2.301667,
+   "Snacks": 38.854545
+  },
+  "prior_global": 7.439518,
+  "min_visit_grid_tune_MAE": {
+   "0.0": 16.353151,
+   "1.0": 15.168889,
+   "2.0": 14.880494,
+   "5.0": 14.025486
+  },
+  "min_visit_s": 5.0,
+  "tune_sessions": [
+   "s1"
+  ]
+ },
+ "n": {
+  "s2": {
+   "sections": 4,
+   "stopwatch_visits": 436
+  }
+ },
+ "metric": {
+  "tracker_MAE_s": 11.496848,
+  "per_session": {
+   "s2": {
+    "per_section": {
+     "Dairy": {
+      "stopwatch_mean_s": 39.609524,
+      "tracker_mean_s": 20.365,
+      "prior_mean_s": 41.591667,
+      "n_stopwatch": 21,
+      "n_tracker_visits": 40
+     },
+     "Drinks": {
+      "stopwatch_mean_s": 37.481818,
+      "tracker_mean_s": 21.031579,
+      "prior_mean_s": 41.66,
+      "n_stopwatch": 22,
+      "n_tracker_visits": 38
+     },
+     "Entrance": {
+      "stopwatch_mean_s": 2.287435,
+      "tracker_mean_s": null,
+      "prior_mean_s": 2.301667,
+      "n_stopwatch": 382,
+      "n_tracker_visits": 0
+     },
+     "Snacks": {
+      "stopwatch_mean_s": 35.690909,
+      "tracker_mean_s": 27.685714,
+      "prior_mean_s": 38.854545,
+      "n_stopwatch": 11,
+      "n_tracker_visits": 14
+     }
+    },
+    "tracker_MAE_s": 11.496848,
+    "prior_MAE_s": 2.334548,
+    "n_sections": 4,
+    "n_stopwatch_visits": 436
+   }
+  }
+ },
+ "prior": {
+  "name": "tune-session stopwatch mean per section",
+  "MAE_s": 2.334548
+ },
+ "headline": [
+  {
+   "metric": "section mean dwell MAE (per-ID timer)",
+   "value": 11.496848,
+   "prior": 2.334548,
+   "unit": "s per section",
+   "beats_prior": false
+  }
+ ],
+ "score_lock": {
+  "lock": "var/locks/synth_aisle_s2.lock",
+  "n_scored_runs": 13,
+  "force_rescore": true,
+  "synthetic": true,
+  "rule_hash": "39b27422418ec6c2",
+  "rule_hash_first": "39b27422418ec6c2",
+  "rule_changed_since_first_score": false,
+  "runs_before_rule_hash": 12,
+  "script": "stopwatch",
+  "tuned": {
+   "min_visit_s": 5.0
+  }
+ }
+}

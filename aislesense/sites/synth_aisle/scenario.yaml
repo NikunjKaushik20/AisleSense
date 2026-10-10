@@ -1,0 +1,12 @@
+# synthetic generator scenario (M1: passers + lingerers only)
+seed: 0
+duration_s: 600
+hz: 5
+passers:
+  rate_per_s: 0.15
+  speed_mps: [1.0, 1.5]
+  lane_y: [2.5, 4.5]
+lingerers:
+  - {zone: Snacks, rate_per_s: 0.02, stay_s: [20, 90]}
+  - {zone: Drinks, rate_per_s: 0.03, stay_s: [30, 120]}
+  - {zone: Dairy, rate_per_s: 0.01, stay_s: [10, 40]}

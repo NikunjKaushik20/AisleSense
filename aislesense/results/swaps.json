@@ -1,0 +1,596 @@
+{
+ "name": "swaps",
+ "data": {
+  "mot20": "MOT20 train 4 seqs (station crowd, public detections) - not a store",
+  "merl": "MERL Shopping test subjects 27-41 (real overhead store video, 1 shopper per clip)",
+  "synth": "synthetic synth_aisle sessions (harness proof, not evidence)"
+ },
+ "config": {
+  "arms": [
+   "baseline",
+   "+S1",
+   "+S1+S2",
+   "+S1+S2+S3"
+  ],
+  "ghost": {
+   "ttl_s": 8.0,
+   "k": 1.0,
+   "radius_m_floor": 1.0,
+   "radius_mot20": "k x last box height (px)",
+   "exit": "MERL/MOT20: last box within 5% of image border; floor: 0.5 m of floor edge"
+  },
+  "merge_ttl_s": 8.0,
+  "fast": true
+ },
+ "seed": 0,
+ "data_hash": {
+  "mot20": "8f6558d1eb70633c",
+  "synth": "a949a5cb301c3205"
+ },
+ "params": {
+  "S1_buffer": {
+   "grid": [
+    30,
+    100,
+    200
+   ],
+   "loso": {
+    "MOT20-01": {
+     "pick": 200,
+     "other_seq_MAE": {
+      "30": 4.723515,
+      "100": 4.192203,
+      "200": 4.117679
+     }
+    },
+    "MOT20-02": {
+     "pick": 200,
+     "other_seq_MAE": {
+      "30": 4.614419,
+      "100": 4.098106,
+      "200": 4.040748
+     }
+    },
+    "MOT20-03": {
+     "pick": 200,
+     "other_seq_MAE": {
+      "30": 5.1255,
+      "100": 4.609502,
+      "200": 4.548187
+     }
+    },
+    "MOT20-05": {
+     "pick": 200,
+     "other_seq_MAE": {
+      "30": 4.134537,
+      "100": 3.595899,
+      "200": 3.484494
+     }
+    }
+   },
+   "chosen_on": "MOT20 leave-one-sequence-out (held-out sequence never picks)"
+  },
+  "S2_ghost": {
+   "grid_val_F1": {
+    "ttl0_k1": 0.738825,
+    "ttl0_k2": 0.738825,
+    "ttl1_k1": 0.777303,
+    "ttl1_k2": 0.777303,
+    "ttl2_k1": 0.804683,
+    "ttl2_k2": 0.804683,
+    "ttl4_k1": 0.83803,
+    "ttl4_k2": 0.83803,
+    "ttl8_k1": 0.869971,
+    "ttl8_k2": 0.869971
+   },
+   "pick": {
+    "ttl_s": 8.0,
+    "k": 1.0
+   },
+   "chosen_on": "MERL val subjects 21-26",
+   "val_clips": [
+    "21_1",
+    "21_2",
+    "21_3",
+    "22_1",
+    "22_2",
+    "22_3",
+    "23_1",
+    "23_2",
+    "23_3",
+    "24_1",
+    "24_2",
+    "24_3",
+    "25_1",
+    "25_2",
+    "25_3",
+    "26_1",
+    "26_2",
+    "26_3"
+   ]
+  },
+  "S3_merge_ttl": {
+   "ttl_s": 8.0,
+   "chosen_on": "same as S2 (MERL val)"
+  },
+  "synth_min_visit": {
+   "baseline": 5.0,
+   "+S1": 5.0,
+   "+S1+S2": 2.0,
+   "+S1+S2+S3": 2.0
+  },
+  "synth_tune_grid": {
+   "baseline": {
+    "min_visit_s": 5.0,
+    "tune_MAE_grid": {
+     "0.0": 16.15197,
+     "1.0": 15.24697,
+     "2.0": 14.761136,
+     "5.0": 13.99947
+    }
+   },
+   "+S1": {
+    "min_visit_s": 5.0,
+    "tune_MAE_grid": {
+     "0.0": 16.15197,
+     "1.0": 15.24697,
+     "2.0": 14.761136,
+     "5.0": 13.99947
+    }
+   },
+   "+S1+S2": {
+    "min_visit_s": 2.0,
+    "tune_MAE_grid": {
+     "0.0": 13.426136,
+     "1.0": 12.746136,
+     "2.0": 12.368636,
+     "5.0": 13.201136
+    }
+   },
+   "+S1+S2+S3": {
+    "min_visit_s": 2.0,
+    "tune_MAE_grid": {
+     "0.0": 10.956136,
+     "1.0": 9.871136,
+     "2.0": 9.191136,
+     "5.0": 10.173636
+    }
+   }
+  }
+ },
+ "arms": [
+  {
+   "arm": "baseline",
+   "swaps": [],
+   "mot20": {
+    "span_MAE_s": 4.696288,
+    "span_bias_s": -4.163729,
+    "AUROC_ge15s": 0.712274,
+    "under_half_truth": 0.336929,
+    "minus_prior_MAE_s": 0.735259,
+    "minus_prior_CI95": [
+     0.567685,
+     0.896236
+    ],
+    "seqs_beating_prior": 0,
+    "per_seq": {
+     "MOT20-01": {
+      "span_MAE_s": 3.209231,
+      "prior_MAE_s": 2.558769
+     },
+     "MOT20-02": {
+      "span_MAE_s": 5.260611,
+      "prior_MAE_s": 4.357118
+     },
+     "MOT20-03": {
+      "span_MAE_s": 3.722604,
+      "prior_MAE_s": 2.663797
+     },
+     "MOT20-05": {
+      "span_MAE_s": 5.157059,
+      "prior_MAE_s": 4.638006
+     }
+    },
+    "zone_mean_MAE_s": 1.665172,
+    "n_zones": 27,
+    "buffer": {
+     "MOT20-01": 30,
+     "MOT20-02": 30,
+     "MOT20-03": 30,
+     "MOT20-05": 30
+    }
+   },
+   "mot20_prior": {
+    "span_MAE_s": 3.961029,
+    "AUROC_ge15s": 0.5,
+    "zone_mean_MAE_s": 2.188262
+   },
+   "merl": {
+    "frame_browse": {
+     "P": 0.883052,
+     "R": 0.709732,
+     "F1": 0.786962,
+     "tp": 31351,
+     "fp": 4152,
+     "fn": 12822
+    },
+    "per_clip_browse_s": {
+     "MAE": 22.895238,
+     "bias": -20.642857
+    },
+    "ids_per_clip": 14.642857
+   },
+   "merl_prior": {
+    "frame_browse_F1": 0.866163,
+    "frame_browse_name": "all-browse",
+    "per_clip_MAE_s": 6.463969,
+    "per_clip_name": "val browse share x clip length",
+    "val_browse_share": 0.775728
+   },
+   "synth": {
+    "section_MAE_s": 11.542421,
+    "entries": 94,
+    "stopwatch_visits": 436,
+    "min_visit_s": 5.0
+   },
+   "synth_prior": {
+    "name": "tune-session stopwatch mean per section",
+    "section_MAE_s": 2.334548
+   }
+  },
+  {
+   "arm": "+S1",
+   "swaps": [
+    "S1"
+   ],
+   "mot20": {
+    "span_MAE_s": 4.099773,
+    "span_bias_s": -3.020271,
+    "AUROC_ge15s": 0.753802,
+    "under_half_truth": 0.24177,
+    "minus_prior_MAE_s": 0.138744,
+    "minus_prior_CI95": [
+     -0.059613,
+     0.326387
+    ],
+    "seqs_beating_prior": 1,
+    "per_seq": {
+     "MOT20-01": {
+      "span_MAE_s": 3.121846,
+      "prior_MAE_s": 2.558769
+     },
+     "MOT20-02": {
+      "span_MAE_s": 4.506638,
+      "prior_MAE_s": 4.357118
+     },
+     "MOT20-03": {
+      "span_MAE_s": 3.082532,
+      "prior_MAE_s": 2.663797
+     },
+     "MOT20-05": {
+      "span_MAE_s": 4.604451,
+      "prior_MAE_s": 4.638006
+     }
+    },
+    "zone_mean_MAE_s": 1.236023,
+    "n_zones": 27,
+    "buffer": {
+     "MOT20-01": 200,
+     "MOT20-02": 200,
+     "MOT20-03": 200,
+     "MOT20-05": 200
+    }
+   },
+   "mot20_prior": {
+    "span_MAE_s": 3.961029,
+    "AUROC_ge15s": 0.5,
+    "zone_mean_MAE_s": 2.188262
+   },
+   "merl": {
+    "frame_browse": {
+     "P": 0.883052,
+     "R": 0.709732,
+     "F1": 0.786962,
+     "tp": 31351,
+     "fp": 4152,
+     "fn": 12822
+    },
+    "per_clip_browse_s": {
+     "MAE": 22.895238,
+     "bias": -20.642857
+    },
+    "not_run": "MERL dump is buffer 30; S1 needs a GPU re-dump (~40 min). Row repeats the arm without S1."
+   },
+   "merl_prior": {
+    "frame_browse_F1": 0.866163,
+    "frame_browse_name": "all-browse",
+    "per_clip_MAE_s": 6.463969,
+    "per_clip_name": "val browse share x clip length",
+    "val_browse_share": 0.775728
+   },
+   "synth": {
+    "section_MAE_s": 11.542421,
+    "entries": 94,
+    "stopwatch_visits": 436,
+    "min_visit_s": 5.0,
+    "not_applicable": "synthetic rows have no tracker; S1 does not change them (row repeats baseline)"
+   },
+   "synth_prior": {
+    "name": "tune-session stopwatch mean per section",
+    "section_MAE_s": 2.334548
+   }
+  },
+  {
+   "arm": "+S1+S2",
+   "swaps": [
+    "S1",
+    "S2"
+   ],
+   "mot20": {
+    "span_MAE_s": 3.828105,
+    "span_bias_s": -1.311635,
+    "AUROC_ge15s": 0.817225,
+    "under_half_truth": 0.146611,
+    "minus_prior_MAE_s": -0.132924,
+    "minus_prior_CI95": [
+     -0.346547,
+     0.062022
+    ],
+    "seqs_beating_prior": 2,
+    "per_seq": {
+     "MOT20-01": {
+      "span_MAE_s": 2.577231,
+      "prior_MAE_s": 2.558769
+     },
+     "MOT20-02": {
+      "span_MAE_s": 4.331004,
+      "prior_MAE_s": 4.357118
+     },
+     "MOT20-03": {
+      "span_MAE_s": 2.714286,
+      "prior_MAE_s": 2.663797
+     },
+     "MOT20-05": {
+      "span_MAE_s": 4.373353,
+      "prior_MAE_s": 4.638006
+     }
+    },
+    "zone_mean_MAE_s": 1.109438,
+    "n_zones": 27,
+    "buffer": {
+     "MOT20-01": 200,
+     "MOT20-02": 200,
+     "MOT20-03": 200,
+     "MOT20-05": 200
+    }
+   },
+   "mot20_prior": {
+    "span_MAE_s": 3.961029,
+    "AUROC_ge15s": 0.5,
+    "zone_mean_MAE_s": 2.188262
+   },
+   "merl": {
+    "frame_browse": {
+     "P": 0.844169,
+     "R": 0.913024,
+     "F1": 0.877247,
+     "tp": 40331,
+     "fp": 7445,
+     "fn": 3842
+    },
+    "per_clip_browse_s": {
+     "MAE": 9.254762,
+     "bias": 8.578571
+    },
+    "not_run": "MERL dump is buffer 30; S1 needs a GPU re-dump (~40 min). Row repeats the arm without S1."
+   },
+   "merl_prior": {
+    "frame_browse_F1": 0.866163,
+    "frame_browse_name": "all-browse",
+    "per_clip_MAE_s": 6.463969,
+    "per_clip_name": "val browse share x clip length",
+    "val_browse_share": 0.775728
+   },
+   "synth": {
+    "section_MAE_s": 10.218704,
+    "entries": 540,
+    "stopwatch_visits": 436,
+    "min_visit_s": 2.0
+   },
+   "synth_prior": {
+    "name": "tune-session stopwatch mean per section",
+    "section_MAE_s": 2.334548
+   }
+  },
+  {
+   "arm": "+S1+S2+S3",
+   "swaps": [
+    "S1",
+    "S2",
+    "S3"
+   ],
+   "mot20": {
+    "span_MAE_s": 3.828105,
+    "span_bias_s": -1.311635,
+    "AUROC_ge15s": 0.817225,
+    "under_half_truth": 0.146611,
+    "minus_prior_MAE_s": -0.132924,
+    "minus_prior_CI95": [
+     -0.346547,
+     0.062022
+    ],
+    "seqs_beating_prior": 2,
+    "per_seq": {
+     "MOT20-01": {
+      "span_MAE_s": 2.577231,
+      "prior_MAE_s": 2.558769
+     },
+     "MOT20-02": {
+      "span_MAE_s": 4.331004,
+      "prior_MAE_s": 4.357118
+     },
+     "MOT20-03": {
+      "span_MAE_s": 2.714286,
+      "prior_MAE_s": 2.663797
+     },
+     "MOT20-05": {
+      "span_MAE_s": 4.373353,
+      "prior_MAE_s": 4.638006
+     }
+    },
+    "zone_mean_MAE_s": 1.206994,
+    "n_zones": 27,
+    "buffer": {
+     "MOT20-01": 200,
+     "MOT20-02": 200,
+     "MOT20-03": 200,
+     "MOT20-05": 200
+    }
+   },
+   "mot20_prior": {
+    "span_MAE_s": 3.961029,
+    "AUROC_ge15s": 0.5,
+    "zone_mean_MAE_s": 2.188262
+   },
+   "merl": {
+    "frame_browse": {
+     "P": 0.844169,
+     "R": 0.913024,
+     "F1": 0.877247,
+     "tp": 40331,
+     "fp": 7445,
+     "fn": 3842
+    },
+    "per_clip_browse_s": {
+     "MAE": 9.254762,
+     "bias": 8.578571
+    },
+    "entries_per_clip": 10.964286,
+    "ids_per_clip": 14.642857,
+    "true_shoppers_per_clip": 1,
+    "person_s_per_clip_MAE": 44.416667,
+    "note": "frame F1 and per-clip browse seconds are presence-based and unchanged by S3; S3 changes the entry count (IDs per clip -> merged entries) and the person-seconds sum (overlapping duplicate IDs add up).",
+    "not_run": "MERL dump is buffer 30; S1 needs a GPU re-dump (~40 min). Row repeats the arm without S1."
+   },
+   "merl_prior": {
+    "frame_browse_F1": 0.866163,
+    "frame_browse_name": "all-browse",
+    "per_clip_MAE_s": 6.463969,
+    "per_clip_name": "val browse share x clip length",
+    "val_browse_share": 0.775728
+   },
+   "synth": {
+    "section_MAE_s": 7.063704,
+    "entries": 494,
+    "stopwatch_visits": 436,
+    "min_visit_s": 2.0
+   },
+   "synth_prior": {
+    "name": "tune-session stopwatch mean per section",
+    "section_MAE_s": 2.334548
+   }
+  }
+ ],
+ "per_visit_beats_prior": {
+  "baseline": {
+   "mot20_span": false,
+   "mot20_span_point_lower": false,
+   "merl_per_clip": false
+  },
+  "+S1": {
+   "mot20_span": false,
+   "mot20_span_point_lower": false,
+   "merl_per_clip": false
+  },
+  "+S1+S2": {
+   "mot20_span": false,
+   "mot20_span_point_lower": true,
+   "merl_per_clip": false
+  },
+  "+S1+S2+S3": {
+   "mot20_span": false,
+   "mot20_span_point_lower": true,
+   "merl_per_clip": false
+  }
+ },
+ "any_arm_beats_prior_per_visit": false,
+ "statement": "On MOT20 no arm beats the LOSO prior on per-visit span MAE (no 95% CI of arm minus prior lies below 0). Arm +S1+S2 has a lower point MAE (3.83 s vs 3.96 s, difference -0.13 s, CI [-0.35, +0.06], 2 of 4 sequences): a tie, not a win. On MERL no arm beats the prior on per-clip browse seconds (val share x clip length). The swaps shrink per-ID error and raise long-dweller AUROC and frame browse F1; the prior column stays beside every dwell number.",
+ "fallback": {
+  "rule": "if S2 hurts on synth multi-shopper scenes (wrong holds), keep S1 only and show the long-stay list instead of dwell MAE",
+  "synth_S1_MAE_s": 11.542421,
+  "synth_S1S2_MAE_s": 10.218704,
+  "S2_hurts_on_synth": false,
+  "stitch_precision": 0.933071,
+  "applied": false
+ },
+ "synth_detail": {
+  "stitch_diagnostics_score_session": {
+   "links": 254,
+   "correct": 237,
+   "precision": 0.933071,
+   "true_id_breaks": 345,
+   "recall": 0.686957,
+   "holds": 537,
+   "holds_ended_by_rebirth": 381
+  },
+  "sessions": {
+   "tune": [
+    "s1"
+   ],
+   "score": [
+    "s2"
+   ]
+  },
+  "access_log": [
+   [
+    "tune",
+    "s1"
+   ],
+   [
+    "score",
+    "s2"
+   ]
+  ],
+  "score_lock": {
+   "lock": "var/locks/synth_aisle_s2.lock",
+   "n_scored_runs": 14,
+   "force_rescore": true,
+   "synthetic": true,
+   "rule_hash": null,
+   "rule_hash_first": "39b27422418ec6c2",
+   "rule_changed_since_first_score": false,
+   "runs_before_rule_hash": 12,
+   "script": "swaps",
+   "tuned": {
+    "baseline": 5.0,
+    "+S1": 5.0,
+    "+S1+S2": 2.0,
+    "+S1+S2+S3": 2.0
+   }
+  }
+ },
+ "merl_n": {
+  "test_clips": 28,
+  "val_clips": 18
+ },
+ "expected_X5_X8": {
+  "mot20_b200_span_MAE_s": [
+   4.1,
+   0.1
+  ],
+  "mot20_b200_AUROC": [
+   0.754,
+   0.02
+  ],
+  "merl_hold_F1": [
+   0.877,
+   0.01
+  ],
+  "merl_hold_MAE_s": [
+   9.3,
+   1.0
+  ],
+  "merl_prior_F1": 0.866,
+  "merl_prior_MAE_s": 6.5
+ }
+}
