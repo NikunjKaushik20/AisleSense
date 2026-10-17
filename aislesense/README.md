@@ -3,7 +3,7 @@
 
 AisleSense turns phone cameras into a live floor map of a store. It shows where shoppers go, how long they stay in each section, which spots block the walkway and which are just popular shelves, and which areas are truly ignored. Where the cameras cannot see well, it shades the area as "can't see" instead of calling it dead.
 
-Built for the IIT Bombay CV hackathon, PS3 (Dwell-Time and Bottleneck Mapper).
+Built for the IIT Bombay CV hackathon, PS3 (Dwell-Time and Bottleneck Mapper), by Nikunj Kaushik, Tavish Agarwal, Snehashish Ghosh and Kavya Batra.
 
 Every number in this file is rendered from `results/*.json` by `scripts/check_claims.py`. Each headline sits next to the baseline or trivial prior it has to beat.
 
@@ -15,6 +15,14 @@ Every number in this file is rendered from `results/*.json` by `scripts/check_cl
 | Is this aisle jammed? | BLOCK when people linger inside a walkway polygon while others pass. Lingering at a shelf front is BROWSE (green), never a bottleneck. | Dense, slow cells, which are mostly people browsing a good shelf |
 | How long do people stay? | Section dwell from person-seconds per entry, with broken tracks merged, always next to a constant prior | A per-ID timer, which breaks every time the tracker loses someone |
 | What should I change? | Plain tips, and a before/after rerun that shows which flags cleared | A heatmap image |
+
+## Architecture
+
+![AisleSense technical architecture, top to bottom: inputs, per-camera worker, event row, session runner, analytics, server, dashboard, offline proof](docs/architecture.png)
+
+Read it top to bottom. Each camera worker turns pixels into floor points (YOLO11n, then ByteTrack, then the foot point through a 4-point homography). After that, only the event row `(session, cam, t, track, x, y, conf)` moves through the system, and it is the only thing stored. The ATC and synthetic sites enter as floor points directly, so they never touch the detector. The analytics rebuild per session version and are served stale-while-revalidate, so a tab switch never waits on a rebuild. The camera preview is drawn in memory with heads pixelated, and no frame is ever written to disk.
+
+The same diagram is in [`docs/architecture.mmd`](docs/architecture.mmd) (Mermaid), and [`docs/architecture_transparent.png`](docs/architecture_transparent.png) has no background, for slides. The PNGs are drawn from [`docs/architecture.html`](docs/architecture.html); re-render both with `python scripts/render_architecture.py` (Playwright and Edge).
 
 ## Get started from a fresh clone
 
@@ -173,7 +181,7 @@ This turns the synthetic browse and block results into real ones.
 | `results/` | The numbers in this README |
 | `sites/` | One folder per site: `site.yaml`, `zones.geojson`, sessions and labels |
 | `synth/` | Synthetic shopper generator and labelled scenarios |
-| `scripts/` | `get_data.py` (datasets) and `check_claims.py` (README numbers against `results/`) |
+| `scripts/` | `get_data.py` (datasets) and `check_claims.py` (README numbers against `results/`), `render_architecture.py` (the diagram PNG) |
 | `tests/` | The `pytest` suite; tests that need the datasets skip without them |
 | `configs/` | Tracker settings and seeds |
 

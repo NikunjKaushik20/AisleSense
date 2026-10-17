@@ -1,6 +1,7 @@
 """Synthetic scenario generator: scenario yaml -> labelled position rows.
 
-M1 scope: passers (walk the main lane end to end) and lingerers (walk to a shelf front, stand, leave).
+Passers walk the main lane end to end, lingerers walk to a shelf front, stand and leave, and blockers are small groups
+that stop together in the walkway while the passers squeeze by (what the D-2 rule should flag as BLOCK).
 Returns rows (t, track, x, y) sorted by t, plus truth visits [{track, zone, t_in, t_out}].
 """
 from __future__ import annotations
@@ -69,6 +70,27 @@ def generate(scenario: dict, site) -> tuple[list, list]:
             for ts, ps in ((ts1, ps1), (ts2, ps2), (ts3, ps3)):
                 rows += [(float(tt), f"l{nid}", float(q[0]), float(q[1])) for tt, q in zip(ts, ps)]
             truth.append({"track": f"l{nid}", "zone": zname, "t_in": float(t_arr), "t_out": float(t_arr + n / hz)})
+            t += rng.exponential(1 / r)
+
+    for B in scenario.get("blockers") or []:
+        bx0, by0, bx1, by1 = _bbox(zones[B["zone"]].polygon)
+        r = float(B.get("rate_per_s", 0.004))
+        s0, s1 = B.get("stay_s", [30, 60])
+        g0, g1 = B.get("group", [2, 3])
+        t = float(B["first_s"]) if "first_s" in B else rng.exponential(1 / r)
+        while t < T:
+            centre = np.array([rng.uniform(bx0 + 2.0, bx1 - 2.0), rng.uniform(ly0 + 0.5, ly1 - 0.5)])
+            stay = rng.uniform(s0, s1)
+            for j in range(int(rng.integers(g0, g1 + 1))):
+                nid += 1
+                spot = centre + rng.normal(0, 0.3, 2)
+                ts1, ps1, t_arr = _walk(entry, spot, 1.2, t + 0.6 * j, hz)
+                n = max(int((t + stay - t_arr) * hz), 1)
+                ts2 = t_arr + np.arange(n) / hz
+                ps2 = spot + rng.normal(0, 0.05, (n, 2))
+                ts3, ps3, _ = _walk(spot, exit_, 1.2, t_arr + n / hz, hz)
+                for ts, ps in ((ts1, ps1), (ts2, ps2), (ts3, ps3)):
+                    rows += [(float(tt), f"b{nid}", float(q[0]), float(q[1])) for tt, q in zip(ts, ps)]
             t += rng.exponential(1 / r)
 
     rows = [r for r in rows if r[0] < T]

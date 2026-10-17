@@ -20,6 +20,33 @@ interface Props {
 
 const ALL = { heat: true, zones: true, tracks: true, coverage: true };
 
+/** The part of the floor worth drawing: walkway and shelf-front zones plus a margin, so a long shelf
+ *  block doesn't eat half the projector. Sites without those zones (ATC, MERL) keep the whole floor. */
+function walkableView(floor: Floor, zones: Zone[]): Floor {
+  const walk = zones.filter((z) => z.kind !== "section");
+  if (!walk.length) return floor;
+  const xs = walk.flatMap((z) => z.polygon.map((p) => p[0])), ys = walk.flatMap((z) => z.polygon.map((p) => p[1]));
+  const pad = 1.5;
+  const x0 = Math.max(floor.x0, Math.min(...xs) - pad), x1 = Math.min(floor.x0 + floor.width, Math.max(...xs) + pad);
+  const y0 = Math.max(floor.y0, Math.min(...ys) - pad), y1 = Math.min(floor.y0 + floor.height, Math.max(...ys) + pad);
+  return { ...floor, x0, y0, width: x1 - x0, height: y1 - y0 };
+}
+
+interface FlagGroup { key: string; type: Flag["type"]; zone: string | null; n: number; x: number; y: number }
+
+/** One marker per zone and flag type ("BROWSE x19 at Dairy front"), placed at the mean flag position.
+ *  Flags outside any zone group by 2 m square. */
+function groupFlags(flags: Flag[]): FlagGroup[] {
+  const m = new Map<string, FlagGroup>();
+  for (const f of flags) {
+    const key = `${f.type}|${f.zone ?? `${Math.round(f.x / 2)},${Math.round(f.y / 2)}`}`;
+    const g = m.get(key) ?? { key, type: f.type, zone: f.zone, n: 0, x: 0, y: 0 };
+    g.n++; g.x += f.x; g.y += f.y;
+    m.set(key, g);
+  }
+  return [...m.values()].map((g) => ({ ...g, x: g.x / g.n, y: g.y / g.n }));
+}
+
 /** Floor plan: heatmap cells on a canvas (fast for ATC's 4.8k cells), every mark a judge reads in SVG on top.
  *  - confidence shading: cells veiled by (1 - coverage)
  *  - UNSEEN: grey hatch; DEAD: solid outline; WATCH: dashed outline   (aware rule)
@@ -38,10 +65,12 @@ export function FloorMap({ floor, heat, dz, zones = [], tracks = [], flags = [],
     return () => ro.disconnect();
   }, []);
 
-  const k = Math.min(w / floor.width, maxHeight / floor.height);
-  const W = Math.round(floor.width * k), H = Math.round(floor.height * k);
-  const sx = (x: number) => (x - floor.x0) * k;
-  const sy = (y: number) => H - (y - floor.y0) * k;
+  const view = useMemo(() => (variant === "full" ? walkableView(floor, zones) : floor), [floor, zones, variant]);
+  const k = Math.min(w / view.width, maxHeight / view.height);
+  const W = Math.round(view.width * k), H = Math.round(view.height * k);
+  const sx = (x: number) => (x - view.x0) * k;
+  const sy = (y: number) => H - (y - view.y0) * k;
+  const groups = useMemo(() => groupFlags(flags), [flags]);
 
   useEffect(() => {
     const c = canvas.current;
@@ -72,7 +101,7 @@ export function FloorMap({ floor, heat, dz, zones = [], tracks = [], flags = [],
         ctx.fillRect(sx(dz.x0 + ix * dz.cell), sy(dz.y0 + (iy + 1) * dz.cell), dz.cell * k + 0.5, dz.cell * k + 0.5);
       }
     }
-  }, [heat, dz, W, H, k, layers.heat, layers.coverage, variant]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [heat, dz, W, H, k, view, layers.heat, layers.coverage, variant]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const marks = useMemo(() => {
     if (!dz) return [];
@@ -89,7 +118,7 @@ export function FloorMap({ floor, heat, dz, zones = [], tracks = [], flags = [],
   const onMove = (e: React.MouseEvent<SVGSVGElement>) => {
     if (!grid) return;
     const r = e.currentTarget.getBoundingClientRect();
-    const x = floor.x0 + (e.clientX - r.left) / k, y = floor.y0 + (H - (e.clientY - r.top)) / k;
+    const x = view.x0 + (e.clientX - r.left) / k, y = view.y0 + (H - (e.clientY - r.top)) / k;
     onPointer?.({ x, y });
     const ix = Math.floor((x - grid.x0) / grid.cell), iy = Math.floor((y - grid.y0) / grid.cell);
     setHover(ix >= 0 && iy >= 0 && ix < grid.nx && iy < grid.ny ? iy * grid.nx + ix : null);
@@ -125,32 +154,47 @@ export function FloorMap({ floor, heat, dz, zones = [], tracks = [], flags = [],
               <line x1="0" y1="0" x2="0" y2="6" stroke="var(--unseen)" strokeWidth="2.2" />
             </pattern>
           </defs>
-          {layers.zones && zones.map((z, zi) => {
-            const pts = z.polygon.map(([x, y]) => `${sx(x)},${sy(y)}`).join(" ");
-            const cx = z.polygon.reduce((a, p) => a + p[0], 0) / z.polygon.length;
-            const top = Math.max(...z.polygon.map((p) => p[1]));
-            return (
-              <g key={zi} className={`zone zone-${z.kind}`}>
-                <polygon points={pts} />
-                {z.kind === "section" && variant === "full" && k * 2 > 14 &&
-                  <text x={sx(cx)} y={sy(top) + 14} textAnchor="middle">{z.name}</text>}
-              </g>
-            );
-          })}
+          {layers.zones && zones.map((z, zi) => (
+            <g key={zi} className={`zone zone-${z.kind}`}>
+              <polygon points={z.polygon.map(([x, y]) => `${sx(x)},${sy(y)}`).join(" ")} />
+            </g>
+          ))}
           {marks.map(({ i, kind }) => {
             const r = cellRect(i);
             return <rect key={`${kind}${i}`} className={`cell-${kind}`} data-state={kind}
               x={r.x} y={r.y} width={r.s} height={r.s} fill={kind === "unseen" ? "url(#hatch)" : undefined} />;
           })}
+          {/* section names above the cell marks so a hatch or heat cell never hides them */}
+          {layers.zones && variant === "full" && k * 2 > 14 && zones.filter((z) => z.kind === "section").map((z, zi) => {
+            const cx = z.polygon.reduce((a, p) => a + p[0], 0) / z.polygon.length;
+            const top = Math.min(Math.max(...z.polygon.map((p) => p[1])), view.y0 + view.height);
+            if (top <= view.y0) return null;
+            const half = z.name.length * 3.6 + 4; // keep the whole name on the map at phone width
+            return <text key={zi} className="zone-label" x={Math.min(Math.max(sx(cx), half), W - half)} y={sy(top) + 15} textAnchor="middle">{z.name}</text>;
+          })}
           {layers.tracks && variant === "full" && tracks.map((t) => (
             <circle key={t.id} className="track" cx={sx(t.x)} cy={sy(t.y)} r={Math.max(3, Math.min(6, k * 0.22))} />
           ))}
-          {variant === "full" && flags.map((f) => (
-            <g key={f.id} className={`flag flag-${f.type.toLowerCase()}`} data-flag={f.type}>
-              <circle cx={sx(f.x)} cy={sy(f.y)} r={Math.max(9, k * 0.6)} />
-              <text x={sx(f.x)} y={sy(f.y) - Math.max(12, k * 0.6) - 4} textAnchor="middle">{f.type}</text>
-            </g>
-          ))}
+          {variant === "full" && groups.map((g) => {
+            const px = sx(g.x), py = sy(g.y);
+            const text = g.n > 1 ? `${g.type} ×${g.n}` : g.type;
+            const pw = text.length * 7 + 14, ph = 20, r = Math.max(5, Math.min(8, k * 0.2));
+            // BROWSE sits at a shelf, so its tag goes up into the shelf; BLOCK sits in the walkway, so its tag goes down
+            const up = g.type === "BROWSE";
+            const tx = Math.min(Math.max(px - pw / 2, 2), W - pw - 2);
+            const ty = Math.min(Math.max(up ? py - r - 6 - ph : py + r + 6, 2), H - ph - 2);
+            return (
+              <g key={g.key} className={`flag flag-${g.type.toLowerCase()}`} data-flag={g.type} data-count={g.n}>
+                <title>{`${g.n} ${g.type.toLowerCase()} flag${g.n === 1 ? "" : "s"}${g.zone ? ` at ${g.zone}` : ""}`}</title>
+                <line x1={px} y1={py} x2={px} y2={up ? ty + ph : ty} />
+                {g.type === "BLOCK"
+                  ? <rect x={px - r} y={py - r} width={2 * r} height={2 * r} transform={`rotate(45 ${px} ${py})`} />
+                  : <circle cx={px} cy={py} r={r} />}
+                <rect className="flag-tag" x={tx} y={ty} width={pw} height={ph} rx={ph / 2} />
+                <text x={tx + pw / 2} y={ty + ph / 2 + 4} textAnchor="middle">{text}</text>
+              </g>
+            );
+          })}
         </svg>
       </div>
       <div className="map-readout" aria-live="off">{readout ?? " "}</div>

@@ -118,8 +118,9 @@ def site_prior(site_id: str, results_dir: Path | None = None) -> tuple[dict, dic
     if p.exists():
         d = json.loads(p.read_text(encoding="utf-8"))
         return (d.get("tuned", {}).get("prior_per_section") or {},
-                {"name": "tune-session stopwatch mean per section", "source": f"results/{p.name}"})
-    return {}, {"name": "none (no tune session for this site yet)", "source": None}
+                {"name": "Hand-timed average",
+                 "source": f"Mean stay per section, timed by hand with a stopwatch in a separate tuning session (results/{p.name})"})
+    return {}, {"name": "Hand-timed average (none yet)", "source": None}
 
 
 def payload(site, events, session: str | None, hz: float | None = None) -> dict:

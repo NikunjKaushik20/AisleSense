@@ -87,7 +87,7 @@ describe("Dwell table", () => {
     expect(screen.getByTestId("prior-col")).toBeInTheDocument();
     expect(screen.getByText("Snacks")).toBeInTheDocument();
     // person-seconds from the real heatmap: cells (0,0) (1,0) (0,1) (1,1) = 1+2+5+6
-    expect(screen.getByText("14")).toBeInTheDocument();
+    expect(screen.getByText("14 s")).toBeInTheDocument();
   });
 
   it("renders the prior column with an empty section list", () => {

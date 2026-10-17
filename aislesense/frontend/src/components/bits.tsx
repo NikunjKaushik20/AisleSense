@@ -59,11 +59,11 @@ export function Legend({ variant = "full" }: { variant?: "full" | "decile" }) {
   );
   return (
     <ul className="legend" aria-label="Map legend">
-      <li><i className="sw sw-ramp" />Person-seconds</li>
-      <li><i className="sw sw-browse" />Browse</li>
-      <li><i className="sw sw-block" />Block</li>
-      <li><i className="sw sw-unseen" />Unseen (camera can't tell)</li>
-      <li><i className="sw sw-dead" />Dead</li>
+      <li title="Darker = more person-seconds"><i className="sw sw-ramp" />Time spent</li>
+      <li><i className="chip chip-browse">BROWSE</i>At a shelf</li>
+      <li><i className="chip chip-block">BLOCK</i>In the walkway</li>
+      <li><i className="sw sw-unseen" />Camera can't see</li>
+      <li title="Under a quarter of the neighbours' visitors while the camera sees it well"><i className="sw sw-dead" />Dead floor</li>
       <li><i className="sw sw-watch" />Watch</li>
     </ul>
   );

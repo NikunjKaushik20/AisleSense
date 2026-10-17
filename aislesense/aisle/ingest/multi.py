@@ -56,6 +56,7 @@ class CamStream:
         self.reader_done = False
         self.t_first = None
         self._loop = 0
+        self.preview = None  # (frame, person boxes, track ids): newest frame, memory only, for /api/camera
 
     # ---------------------------------------------------------------- reader thread
     def _put(self, item) -> None:
@@ -151,6 +152,7 @@ class CamStream:
                 vs._reset_tracker()
             t = self.now() if self.paced else t_media
             evs = vs._events(frame, t, loop_k)
+            self.preview = (frame, vs.last_xyxy, list(getattr(vs, "last_ids", [])))
             if self.recorder is not None:
                 self.recorder.write(frame, vs.last_xyxy)
             wall = self.now()
@@ -252,6 +254,15 @@ class MultiSource(Source):
         names = ", ".join(s.vs.cam.id for s in rep)
         return (f"Live stream {names} dropped: showing a replay of its recorded event rows until it reconnects "
                 f"(no new data)")
+
+    def preview_jpeg(self, cam: str | None = None) -> bytes | None:
+        """Newest frame of one camera (the first when cam is None), heads blurred, boxes drawn. None before a frame."""
+        from aisle.cv.preview import render_jpeg
+        cs = next((s for s in self.streams if cam is None or s.vs.cam.id == cam), None)
+        if cs is None or cs.preview is None or cs.state != "live":
+            return None
+        frame, xyxy, ids = cs.preview
+        return render_jpeg(frame, xyxy, ids)
 
     def stats(self) -> dict:
         return {"streams": [s.stats() for s in self.streams], "fallback": self.fallback(), "n_streams": len(self.subs),

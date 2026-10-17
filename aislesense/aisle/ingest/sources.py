@@ -32,12 +32,14 @@ class Source:
 
 
 class SynthSource(Source):
-    """Replays generator rows; loops with a media-time offset so a live demo never runs dry."""
+    """Replays generator rows; loops with a media-time offset so a live demo never runs dry.
+    Each loop re-generates with the next seed, so loop 2 is new shoppers, not a rerun of loop 1."""
 
     def __init__(self, site, session: str, loop: bool = True):
         from synth.generator import generate, load_scenario
         sc = load_scenario(site)
         self.rows, self.truth = generate(sc, site)
+        self._regen = lambda k: generate({**sc, "seed": int(sc.get("seed", 0)) + k}, site)[0]
         self.T = float(sc.get("duration_s", 600))
         self.nominal_dt = 1.0 / float(sc.get("hz", 5))
         self.max_gap, self.death_gap = 1.0, 3.0
@@ -47,7 +49,8 @@ class SynthSource(Source):
     def __iter__(self):
         for k in itertools.count():
             off = k * self.T
-            for t, grp in itertools.groupby(self.rows, key=lambda r: r[0]):
+            rows = self.rows if k == 0 else self._regen(k)
+            for t, grp in itertools.groupby(rows, key=lambda r: r[0]):
                 yield t + off, [Event(self.session, "synth", t + off, f"{tr}#{k}" if k else tr, x, y, 1.0) for _, tr, x, y in grp]
             if not self.loop:
                 return
@@ -162,9 +165,10 @@ class VideoSource(Source):
         self.frames += 1
         b = r.boxes
         self.last_xyxy = b.xyxy.cpu().numpy() if b is not None and len(b) else []
+        self.last_ids = b.id.int().tolist() if b is not None and b.id is not None and len(b) else []
         if b is None or b.id is None or len(b) == 0:
             return []
-        ids = b.id.int().tolist()
+        ids = self.last_ids
         conf = b.conf.cpu().numpy()
         fl = self.hg.apply(self.H, self.hg.foot_points(b.xyxy.cpu().numpy()))
         return [Event(self.session, self.cam.id, float(t), f"{self.cam.id}:{loop_k}:{i}", float(p[0]), float(p[1]), float(c))

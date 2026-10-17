@@ -147,7 +147,20 @@ def frame(events) -> pd.DataFrame:
     return b
 
 
-def analyse(site, events, keep: float = 1.0, prev_events=None, seed: int = 0) -> dict:
+def dead_mask(site, events):
+    """(nx, ny) DEAD mask of one session under the aware rule, or None when it has no rows. This is all a later
+    session needs from it (WATCH = dead now, not dead then), so the API caches this instead of the rows."""
+    fl = site.floor
+    c = float(fl.get("cell", 1.0))
+    nx, ny = int(np.ceil(fl["width"] / c)), int(np.ceil(fl["height"] / c))
+    pb = frame(events)
+    if not len(pb):
+        return None
+    pv, pt = counts(pb.id.values, pb.x.values, pb.y.values, fl["x0"], fl["y0"], nx, ny, c)
+    return aware(pv, pt)["dead"]
+
+
+def analyse(site, events, keep: float = 1.0, prev_events=None, seed: int = 0, prev_dead=None) -> dict:
     fl = site.floor
     c = float(fl.get("cell", 1.0))
     nx, ny = int(np.ceil(fl["width"] / c)), int(np.ceil(fl["height"] / c))
@@ -160,12 +173,8 @@ def analyse(site, events, keep: float = 1.0, prev_events=None, seed: int = 0) ->
         if patch.any():
             b, _ = inject(b, patch, fl["x0"], fl["y0"], seed, keep, c)
             vis, term = counts(b.id.values, b.x.values, b.y.values, fl["x0"], fl["y0"], nx, ny, c)
-    prev_dead = None
-    if prev_events is not None:
-        pb = frame(prev_events)
-        if len(pb):
-            pv, pt = counts(pb.id.values, pb.x.values, pb.y.values, fl["x0"], fl["y0"], nx, ny, c)
-            prev_dead = aware(pv, pt)["dead"]
+    if prev_dead is None and prev_events is not None:
+        prev_dead = dead_mask(site, prev_events)
     st, a = states(vis, term, prev_dead)
     return {"nx": nx, "ny": ny, "cell": c, "vis": vis, "term": term, "state": st, "aware": a,
             "decile": decile_rule(vis, term), "coverage": coverage(a), "patch": patch, "has_prev": prev_dead is not None}
@@ -190,8 +199,9 @@ def pooled_from_results(res: dict | None) -> dict | None:
     return out
 
 
-def payload(site, events, session: str, keep: float = 1.0, prev_events=None, results: dict | None = None) -> dict:
-    r = analyse(site, events, keep, prev_events)
+def payload(site, events, session: str, keep: float = 1.0, prev_events=None, results: dict | None = None,
+            prev_dead=None) -> dict:
+    r = analyse(site, events, keep, prev_events, prev_dead=prev_dead)
     pooled = pooled_from_results(results)
     st = r["state"]
     return {"session": session, "site": site.id, "keep": keep, "x0": site.floor["x0"], "y0": site.floor["y0"],

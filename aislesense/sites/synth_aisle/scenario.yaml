@@ -1,4 +1,4 @@
-# synthetic generator scenario (M1: passers + lingerers only)
+# synthetic generator scenario: passers, shelf lingerers (BROWSE) and walkway blockers (BLOCK)
 seed: 0
 duration_s: 600
 hz: 5
@@ -10,3 +10,5 @@ lingerers:
   - {zone: Snacks, rate_per_s: 0.02, stay_s: [20, 90]}
   - {zone: Drinks, rate_per_s: 0.03, stay_s: [30, 120]}
   - {zone: Dairy, rate_per_s: 0.01, stay_s: [10, 40]}
+blockers:   # small groups that stop to chat in the walkway; the first one starts 40 s in so the demo shows a BLOCK early
+  - {zone: Main walkway, first_s: 40, rate_per_s: 0.004, stay_s: [30, 70], group: [2, 3]}

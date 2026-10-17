@@ -1,6 +1,20 @@
 import type { Dwell } from "../api/types";
 import { fmtDuration, fmtNum } from "../lib/grid";
+
+/** Media time as m:ss (h:mm:ss past an hour), for "when did this long stay start". */
+function clock(t: number): string {
+  const s = Math.max(0, Math.round(t)), h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), r = String(s % 60).padStart(2, "0");
+  return h ? `${h}:${String(m).padStart(2, "0")}:${r}` : `${m}:${r}`;
+}
 import { Preview, Skeleton } from "./bits";
+
+/** Person-seconds as a readable total ("1 h 12 min", "3 min 20 s"). The raw value is in the cell's title. */
+function fmtTotal(ps: number): string {
+  if (ps < 60) return `${Math.round(ps)} s`;
+  if (ps < 3600) return fmtDuration(ps).replace(/ 0 s$/, "");
+  const h = Math.floor(ps / 3600);
+  return `${h} h ${Math.round((ps - h * 3600) / 60)} min`;
+}
 
 /** Section dwell. The prior column is always rendered, even when empty: every number sits beside its baseline. */
 export function DwellTable({ dwell, preview, milestone }: { dwell: Dwell | null; preview: boolean; milestone?: string }) {
@@ -14,11 +28,11 @@ export function DwellTable({ dwell, preview, milestone }: { dwell: Dwell | null;
         <thead>
           <tr>
             <th scope="col">Section</th>
-            <th scope="col" className="r">Person-seconds</th>
-            <th scope="col" className="r">Entries</th>
-            <th scope="col" className="r">Dwell / entry</th>
-            <th scope="col" className="r" data-testid="prior-col" title={dwell.prior.source}>{dwell.prior.name}</th>
-            <th scope="col" className="r">Long stays</th>
+            <th scope="col" className="r" title="Total time spent in the section by everyone, in person-seconds">Total time</th>
+            <th scope="col" className="r" title="How many times someone walked into the section">Visits</th>
+            <th scope="col" className="r" title="Average time per visit, compared with the hand-timed average">Avg stay</th>
+            <th scope="col" className="r" data-testid="prior-col" title={dwell.prior.source ?? undefined}>{dwell.prior.name}</th>
+            <th scope="col" className="r" title="Visits well past the section's usual time">Long stays</th>
           </tr>
         </thead>
         <tbody>
@@ -28,9 +42,12 @@ export function DwellTable({ dwell, preview, milestone }: { dwell: Dwell | null;
             return (
               <tr key={r.section}>
                 <th scope="row">{r.section}</th>
-                <td className="num r bar-cell"><span className="bar" style={{ width: `${(100 * r.person_s) / maxPs}%` }} />{fmtNum(r.person_s)}</td>
+                <td className="num r bar-cell"><span className="bar" style={{ width: `${(100 * r.person_s) / maxPs}%` }} />{fmtTotal(r.person_s)}</td>
                 <td className="num r">{r.entries ? fmtNum(r.entries) : "—"}</td>
-                <td className="num r">{fmtDuration(r.dwell_s)}{delta !== null && <span className={`delta ${delta >= 0 ? "up" : "down"}`}> {delta >= 0 ? "+" : ""}{Math.round(delta * 100)}%</span>}</td>
+                <td className="num r stay">
+                  <span>{fmtDuration(r.dwell_s)}</span>
+                  {delta !== null && <span className={`delta ${delta >= 0 ? "up" : "down"}`}>{delta >= 0 ? "+" : "−"}{Math.abs(Math.round(delta * 100))}% vs hand-timed</span>}
+                </td>
                 <td className="num r prior">{fmtDuration(r.prior_s)}</td>
                 <td className="num r">{r.n_long ? fmtNum(r.n_long) : "—"}</td>
               </tr>
@@ -42,7 +59,7 @@ export function DwellTable({ dwell, preview, milestone }: { dwell: Dwell | null;
       {dwell.long_stays.length === 0
         ? <p className="empty">No long stays yet. People who stay well past their section's usual time are listed here.</p>
         : <ol className="longs">{dwell.long_stays.slice(0, 8).map((l) => (
-            <li key={`${l.track}${l.t_in}`}><span>{l.section}</span><span className="num">{fmtDuration(l.seconds)}</span><span className="num muted">track {l.track}</span></li>
+            <li key={`${l.track}${l.t_in}`}><span>{l.section}</span><span className="num">{fmtDuration(l.seconds)}</span><span className="num muted">from {clock(l.t_in)}</span></li>
           ))}</ol>}
     </div>
   );

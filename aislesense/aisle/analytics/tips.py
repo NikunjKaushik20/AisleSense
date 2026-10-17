@@ -51,7 +51,7 @@ def from_parts(site, dz_state, flags: list, dwell: dict | None) -> list:
         rows = [r for r in dwell.get("sections", []) if r.get("dwell_s") is not None and r.get("entries", 0) >= MIN_ENTRIES]
         med = float(np.median([r["dwell_s"] for r in rows])) if rows else None
         for r in rows:
-            ref, what = (r["prior_s"], "the stopwatch prior") if r.get("prior_s") else (med, "the median section")
+            ref, what = (r["prior_s"], "the hand-timed average") if r.get("prior_s") else (med, "the median section")
             if ref and r["dwell_s"] > DWELL_RATIO * ref:
                 tips.append({"kind": "DWELL", "zone": r["section"], "severity": 2,
                              "text": f"People spend {r['dwell_s']:.0f} s per visit in {r['section']}, over {DWELL_RATIO:.0f}x "

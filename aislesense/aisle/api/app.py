@@ -5,15 +5,15 @@ import asyncio
 import threading
 
 from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, Response
 from pydantic import BaseModel
 
 from aisle.analytics import heatmap
 from aisle.ingest.runner import Session
-from aisle.schema import list_sites, load_site
+from aisle.schema import VAR_DIR, list_sites, load_site
 from aisle.store.sqlite import Store
 
-VERSION = "0.1.0-m6"
+VERSION = "1.0.0"
 NOT_IMPL = {"status": "not_implemented"}
 
 
@@ -99,6 +99,17 @@ def create_app(store_path=None, autostart: dict | None = None, cfg: dict | None 
         cur = mgr.current
         return cur.summary() if cur else {"session": None, "running": False}
 
+    @app.get("/api/camera")
+    def camera(cam: str | None = None):
+        """Live preview JPEG of a video session's camera (heads pixelated). Built in memory per request, never saved.
+        204 when there is no live frame to show."""
+        cur = mgr.current
+        src = cur.source if cur else None
+        jpg = src.preview_jpeg(cam) if src is not None and hasattr(src, "preview_jpeg") else None
+        if jpg is None:  # not a video session, or no live frame yet: a normal state, so no error status
+            return Response(status_code=204, headers={"Cache-Control": "no-store"})
+        return Response(content=jpg, media_type="image/jpeg", headers={"Cache-Control": "no-store"})
+
     @app.get("/api/heatmap")
     def get_heatmap(session: str | None = None, t0: float | None = None, t1: float | None = None):
         s = mgr.sessions.get(session) if session else mgr.current
@@ -168,18 +179,57 @@ def create_app(store_path=None, autostart: dict | None = None, cfg: dict | None 
             raise HTTPException(404, f"unknown session {session}")
         return load_site(meta["site"]), session, (lambda: _cached(("ev", session, "stored"), lambda: store.events(session))), None, "stored"
 
-    def _previous(site_id: str, sid: str):
-        """Most recent earlier stored session of the same site with events: (id, events) or None."""
+    dead_masks: dict = {}  # finished session id -> its DEAD mask (None = no rows). Finished sessions never change.
+
+    def _dead_mask(site, sid: str):
+        """A finished session's DEAD mask, from memory, then var/cache, then (once) its stored rows. Loading a full
+        ATC day from SQLite takes ~15 s, so without this the first panel after a site switch waits that long."""
+        import numpy as np
+        from aisle.analytics import deadzone as dz
+        if sid in dead_masks:
+            return dead_masks[sid]
+        f = VAR_DIR / "cache" / f"dead_{sid}.npy"
+        m = None
+        try:
+            a = np.load(f)
+            m = a.astype(bool) if a.size else None
+        except (OSError, ValueError):
+            store.flush()
+            m = dz.dead_mask(site, store.events(sid))
+            try:
+                f.parent.mkdir(parents=True, exist_ok=True)
+                np.save(f, m if m is not None else np.zeros(0, bool))
+            except OSError:
+                pass
+        dead_masks[sid] = m
+        return m
+
+    def _previous(site, sid: str):
+        """Most recent earlier stored session of the same site with rows: (id, DEAD mask) or None."""
         ss = store.sessions()
         idx = next((i for i, m in enumerate(ss) if m["id"] == sid), None)
         if idx is None:
             return None
         for m in reversed(ss[:idx]):
-            if m["site"] == site_id:
-                ev = _cached(("ev", m["id"], "stored"), lambda: store.events(m["id"]))
-                if ev:
-                    return m["id"], ev
+            if m["site"] == site.id:
+                mask = _dead_mask(site, m["id"])
+                if mask is not None:
+                    return m["id"], mask
         return None
+
+    def _warm_previous():
+        """Startup: build the mask of each site's latest finished session, the one the next session compares with."""
+        seen = set()
+        for m in reversed(store.sessions()):
+            cur = mgr.current
+            if m["site"] in seen or (cur is not None and m["id"] == cur.id):
+                continue
+            try:
+                site_ = load_site(m["site"])
+            except Exception:
+                continue
+            if _dead_mask(site_, m["id"]) is not None:
+                seen.add(m["site"])
 
     def _build(kind, site, sid, events, hz, ver):
         """One panel payload. kind: flags | journeys | tips | dwell | dz:<keep>."""
@@ -194,15 +244,15 @@ def create_app(store_path=None, autostart: dict | None = None, cfg: dict | None 
             return dwell.payload(site, events(), sid, hz=hz)
         if kind == "tips":
             ev = events()
-            prev = _previous(site.id, sid)
-            st = dz.analyse(site, ev, 1.0, prev[1] if prev else None)["state"]
+            prev = _previous(site, sid)
+            st = dz.analyse(site, ev, 1.0, prev_dead=prev[1] if prev else None)["state"]
             dw = _panel("dwell", site, sid, events, hz, ver, background=True) if ev else None
             return tips.payload(site, sid, st, _panel("flags", site, sid, events, hz, ver, background=True), dw)
         if kind.startswith("dz:"):
-            prev = _previous(site.id, sid)
+            prev = _previous(site, sid)
             p = RESULTS_DIR / "atc_deadzone.json"
             res = json.loads(p.read_text(encoding="utf-8")) if p.exists() else None
-            return dz.payload(site, events(), sid, float(kind[3:]), prev[1] if prev else None, res)
+            return dz.payload(site, events(), sid, float(kind[3:]), None, res, prev_dead=prev[1] if prev else None)
         raise KeyError(kind)
 
     def _timed_build(kind, site, sid, events, hz, ver):
@@ -251,7 +301,16 @@ def create_app(store_path=None, autostart: dict | None = None, cfg: dict | None 
         return _panel(kind, site, sid, events, hz, ver), sid
 
     def _tips(session: str | None):
-        return _p("tips", session)[0]
+        """Tips panel, with the BLOCK / BROWSE tips recounted from the same flags panel the map shows. The full tips
+        build (dead zones + dwell) can trail the flags by a refresh, and a tip saying "blocked 2 times" next to a
+        BLOCK x5 badge reads as a bug."""
+        from aisle.analytics import tips as tp
+        site, sid, events, hz, ver = _resolve(session)
+        t = _panel("tips", site, sid, events, hz, ver)
+        fl = _panel("flags", site, sid, events, hz, ver)
+        fresh = tp.from_parts(site, None, fl, None)  # no dead-zone state or dwell: only BLOCK / BROWSE tips
+        keep = [x for x in t["tips"] if x["kind"] not in ("BLOCK", "BROWSE")]
+        return {**t, "tips": sorted(keep + fresh, key=lambda x: (-x["severity"], x["kind"], str(x["zone"])))}
 
     PANELS = ("dwell", "flags", "tips", "journeys", "dz:1.0", "dz:0.15", "dz:0.05", "dz:0.01")
     stop_prefetch = threading.Event()
@@ -274,6 +333,7 @@ def create_app(store_path=None, autostart: dict | None = None, cfg: dict | None 
         @app.on_event("startup")
         def _start_prefetch():
             threading.Thread(target=_prefetch_loop, daemon=True, name="panel-prefetch").start()
+            threading.Thread(target=_warm_previous, daemon=True, name="warm-previous").start()
 
         @app.on_event("shutdown")
         def _stop_prefetch():

@@ -71,6 +71,7 @@ function Zones({ site, onSaved }: { site: Site; onSaved: () => void }) {
         <button type="button" className="primary" onClick={save} disabled={saving}>{saving ? "Saving…" : "Save zones"}</button>
       </div>
       <p className="hint">Click the plan to place corners (snaps to 25 cm). Walkways are where people pass; shelf fronts are where they stop to browse. A stop on a walkway can become a block; a stop at a shelf never does.</p>
+      <div className="editor-body">
       <div ref={ref}>
         <svg className="editor-plan" width={W} height={H} onClick={click} role="img" aria-label="Floor plan editor">
           {Array.from({ length: Math.floor(f.width / f.cell) + 1 }, (_, i) => <line key={`v${i}`} className="gridline" x1={i * f.cell * k} x2={i * f.cell * k} y1={0} y2={H} />)}
@@ -80,6 +81,8 @@ function Zones({ site, onSaved }: { site: Site; onSaved: () => void }) {
           {draft.map(([x, y], i) => <circle key={i} className="vertex" cx={sx(x)} cy={sy(y)} r={4} />)}
         </svg>
       </div>
+      <div>
+      <h3 className="sub">Zones <span className="num muted">{zones.length}</span></h3>
       <ul className="zone-list">
         {zones.length === 0 && <li className="empty">No zones yet.</li>}
         {zones.map((z, i) => (
@@ -87,6 +90,8 @@ function Zones({ site, onSaved }: { site: Site; onSaved: () => void }) {
             <button type="button" className="ghost small" onClick={() => setZones((zs) => zs.filter((_, j) => j !== i))} aria-label={`Delete ${z.name}`}>Delete</button></li>
         ))}
       </ul>
+      </div>
+      </div>
       {msg && <p className={msg.ok ? "ok-msg" : "error"} role="status">{msg.text}</p>}
     </div>
   );

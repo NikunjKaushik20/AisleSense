@@ -1,9 +1,10 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { api } from "./api/client";
 import { mockDeadzones, mockDwell, mockJourneys, mockTips } from "./api/mocks";
 import type { Flag, Result, SessionInfo, Site, SiteSummary, StoredSession } from "./api/types";
 import { BeforeAfter } from "./components/BeforeAfter";
-import { AtcBanner, FallbackBanner, Legend, Panel, Preview, Skeleton, SynthBanner } from "./components/bits";
+import { CameraTile } from "./components/CameraTile";
+import { AtcBanner, FallbackBanner, Legend, Panel, Skeleton, SynthBanner } from "./components/bits";
 import { CoverageSlider } from "./components/CoverageSlider";
 import { DwellTable } from "./components/DwellTable";
 import { FloorMap } from "./components/FloorMap";
@@ -40,6 +41,10 @@ export default function App() {
   const [layers, setLayers] = useState({ heat: true, zones: true, tracks: true, coverage: true });
   const [now, setNow] = useState(Date.now());
   const live = useLive();
+  const tabsRef = useRef<HTMLElement>(null);
+  const [vh, setVh] = useState(() => window.innerHeight);
+
+  useEffect(() => { const f = () => setVh(window.innerHeight); window.addEventListener("resize", f); return () => window.removeEventListener("resize", f); }, []);
 
   useEffect(() => { try { localStorage.setItem("aisle.tab", tab); } catch { /* private mode */ } }, [tab]);
   useEffect(() => { const t = setInterval(() => setNow(Date.now()), 1000); return () => clearInterval(t); }, []);
@@ -81,6 +86,13 @@ export default function App() {
     catch (e) { setStartErr((e as Error).message); }
     finally { setBusy(false); }
   }, []);
+
+  // On a 720p projector the tab panel starts low on the screen; bring it up when a tab is picked.
+  const pickTab = (t: Tab) => {
+    setTab(t);
+    const el = tabsRef.current;
+    if (el && el.getBoundingClientRect().top > window.innerHeight * 0.45) el.scrollIntoView({ behavior: window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+  };
 
   if (sitesErr) return (
     <main className="fatal">
@@ -131,7 +143,7 @@ export default function App() {
           }>
             {site && H ? (
               <FloorMap floor={site.floor} heat={H} dz={dz.data?.data ?? null} zones={site.zones} tracks={tracks} flags={flags}
-                layers={layers} label={`Live heatmap of ${site.name}`} />
+                layers={layers} label={`Live heatmap of ${site.name}`} maxHeight={Math.max(260, Math.min(640, vh - 330))} />
             ) : heat.error ? <p className="error" role="alert">Heatmap unavailable: {heat.error}</p> : <Skeleton h={360} />}
             <div className="map-foot">
               <Legend />
@@ -140,6 +152,11 @@ export default function App() {
           </Panel>
 
           <aside className="rail">
+            {siteKind === "video" && site && site.cameras.length > 0 && (
+              <Panel id="camera" title="What the camera sees">
+                <CameraTile cams={site.cameras} />
+              </Panel>
+            )}
             <Panel id="tips" title="What to do next">
               <Tips tips={tips.data?.data ?? null} preview={preview(tips.data)} milestone={tips.data?.milestone} />
             </Panel>
@@ -156,10 +173,10 @@ export default function App() {
             </Panel>
           </aside>
 
-          <section className="panel tabs-panel">
+          <section className="panel tabs-panel" ref={tabsRef}>
             <div className="tabs" role="tablist" aria-label="Analysis">
               {TABS.map((t) => (
-                <button key={t.id} type="button" role="tab" id={`tab-${t.id}`} aria-selected={tab === t.id} aria-controls={`pane-${t.id}`} onClick={() => setTab(t.id)}>{t.label}</button>
+                <button key={t.id} type="button" role="tab" id={`tab-${t.id}`} aria-selected={tab === t.id} aria-controls={`pane-${t.id}`} onClick={() => pickTab(t.id)}>{t.label}</button>
               ))}
             </div>
             <div className="tab-pane" role="tabpanel" id={`pane-${tab}`} aria-labelledby={`tab-${tab}`}>
@@ -167,7 +184,13 @@ export default function App() {
               {tab === "journeys" && <Sankey journeys={journeys.data?.data ?? null} preview={preview(journeys.data)} milestone={journeys.data?.milestone} />}
               {tab === "deadzones" && site && (
                 <>
-                  {siteKind !== "atc" && <Preview milestone="the ATC replay">The camera-quality test is scored on ATC (held-out days). Switch the site to ATC for the numbers.</Preview>}
+                  {siteKind !== "atc" && sites?.some((s) => s.id === "atc") && (
+                    <div className="switch-note" role="note">
+                      <p><strong>The dead-zone test runs on a real mall.</strong> The maps below are this site&rsquo;s live floor; the scored
+                        comparison uses a full day of ATC mall trajectories.</p>
+                      <button type="button" className="primary" disabled={busy} onClick={() => start("atc", "replay", 600)}>Switch to the ATC mall</button>
+                    </div>
+                  )}
                   <CoverageSlider floor={site.floor} heat={H} keep={keep} onKeep={setKeep} dz={dz.data?.data ?? null}
                     preview={preview(dz.data)} milestone={dz.data?.milestone} />
                 </>
@@ -179,7 +202,7 @@ export default function App() {
         </main>
       )}
       <footer className="foot">
-        <span>No video frames are stored; only floor positions.</span>
+        <span>No video frames are stored; only floor positions.{siteKind === "video" ? " The camera view is drawn live with heads pixelated." : ""}</span>
         {anyPreview && <span>Panels marked &ldquo;Coming&rdquo; show placeholders until their milestone lands.</span>}
       </footer>
     </div>
